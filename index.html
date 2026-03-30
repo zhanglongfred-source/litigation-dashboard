@@ -344,12 +344,12 @@ footer {
 <script>
 // ══ 数据 ══
 const typeData = [
-  { label:'起诉状', val:21, color:'#7c6fff' },
-  { label:'传票',   val:21, color:'#4facfe' },
-  { label:'未分类', val:13, color:'#7a85a8' },
-  { label:'裁定',   val:12, color:'#ff9d3a' },
-  { label:'调解',   val:2,  color:'#ff5c6c' },
-  { label:'判决',   val:1,  color:'#38f9a4' },
+  { label:'人格权侵权',  val:26, color:'#7c6fff' },
+  { label:'服务合同',    val:20, color:'#4facfe' },
+  { label:'知产侵权',    val:10, color:'#38f9a4' },
+  { label:'商品知产',    val:6,  color:'#ff9d3a' },
+  { label:'不正当竞争',  val:3,  color:'#ff5c6c' },
+  { label:'其他',        val:5,  color:'#7a85a8' },
 ];
 const total = typeData.reduce((s,d)=>s+d.val,0);
 
@@ -362,31 +362,52 @@ const regionData = [
   { label:'其他省市',   val:7,  max:58 },
 ];
 
+// tag 颜色映射（按案件类型）
+const TYPE_COLOR = {
+  '服务合同（用户）':          ['#4facfe','#4facfe22'],
+  '笔记/私信/群聊侵权（人格权）': ['#7c6fff','#7c6fff22'],
+  '笔记侵权（知产侵权）':      ['#38f9a4','#38f9a422'],
+  '商品侵权（知识产权）':      ['#ff9d3a','#ff9d3a22'],
+  '不正当竞争':                ['#ff5c6c','#ff5c6c22'],
+  '网购合同纠纷':              ['#ffc94a','#ffc94a22'],
+  '服务合同（商家）':          ['#4facfe','#4facfe44'],
+  '其他':                      ['#7a85a8','#7a85a844'],
+};
+const RISK_COLOR = {
+  '高风险': ['#ff5c6c','#ff5c6c22'],
+  '中风险': ['#ffc94a','#ffc94a22'],
+  '低风险': ['#38f9a4','#38f9a422'],
+};
+function tc(type){ return (TYPE_COLOR[type]||TYPE_COLOR['其他'])[0]; }
+function bc(type){ return (TYPE_COLOR[type]||TYPE_COLOR['其他'])[1]; }
+function rtc(risk){ return (RISK_COLOR[risk]||RISK_COLOR['低风险'])[0]; }
+function rbc(risk){ return (RISK_COLOR[risk]||RISK_COLOR['低风险'])[1]; }
+
 const cases0318 = [
-  { seq:'01', name:'张馨文',          no:'沪0101民初8682号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'02', name:'（待补充）',      no:'桂0107民初25627号', tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'03', name:'李姝彦',          no:'沪0101民初7902号',  tag:'变更申请',risk:'低风险', tc:'#ffc94a', bc:'#ffc94a22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'04', name:'（待补充）',      no:'沪0101民初37118号', tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'05', name:'阴瑛',            no:'沪0101民初31027号', tag:'起诉状',  risk:'中风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#ffc94a', rbc:'#ffc94a22' },
-  { seq:'06', name:'韩付博',          no:'沪0101民初8959号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'07', name:'（待补充）',      no:'沪0101民初1814号',  tag:'传票',    risk:'低风险', tc:'#4facfe', bc:'#4facfe22', rtc:'#38f9a4', rbc:'#38f9a422', hearing:'4月1日 13:45 开庭' },
-  { seq:'08', name:'兰紫煊',          no:'沪0101民初8960号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'09', name:'郑婷',            no:'沪0101民初9059号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'10', name:'苏茈澜',          no:'沪0101民初8707号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'11', name:'南京优格斯曼',    no:'沪73民初286号',     tag:'起诉状',  risk:'中风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#ffc94a', rbc:'#ffc94a22' },
-  { seq:'12', name:'胡楚觏',          no:'沪0101民初8736号',  tag:'起诉状',  risk:'中风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#ffc94a', rbc:'#ffc94a22' },
-  { seq:'13', name:'GOGO TREATS',     no:'沪0101民初8735号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'14', name:'湖南快乐阳光',    no:'沪0101民初8868号',  tag:'起诉状',  risk:'高风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#ff5c6c', rbc:'#ff5c6c22' },
-  { seq:'15', name:'谢嘉欣',          no:'沪0101民初8867号',  tag:'起诉状',  risk:'中风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#ffc94a', rbc:'#ffc94a22' },
-  { seq:'16', name:'上海捡角餐饮',    no:'沪0101民初8950号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'17', name:'WANG KE',         no:'沪0101民初8831号',  tag:'起诉状',  risk:'中风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#ffc94a', rbc:'#ffc94a22' },
-  { seq:'18', name:'汪钊',            no:'沪0101民初8902号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'19', name:'张丽',            no:'沪0101民初8733号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'20', name:'姚玉洁',          no:'沪0101民初419号',   tag:'裁定',    risk:'低风险', tc:'#ff9d3a', bc:'#ff9d3a22', rtc:'#38f9a4', rbc:'#38f9a422' },
-  { seq:'21', name:'深圳美佳臣商贸',  no:'沪0101民初8696号',  tag:'起诉状',  risk:'中风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#ffc94a', rbc:'#ffc94a22' },
-  { seq:'22', name:'余东',            no:'沪0101民初8695号',  tag:'起诉状',  risk:'中风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#ffc94a', rbc:'#ffc94a22' },
-  { seq:'23', name:'钟洢柠',          no:'沪0101民初8817号',  tag:'起诉状',  risk:'中风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#ffc94a', rbc:'#ffc94a22' },
-  { seq:'24', name:'上海捡角餐饮②',  no:'沪0101民初8949号',  tag:'起诉状',  risk:'低风险', tc:'#7c6fff', bc:'#7c6fff22', rtc:'#38f9a4', rbc:'#38f9a422' },
+  { seq:'01', name:'张馨文',          no:'沪0101民初8682号',  type:'服务合同（用户）',             risk:'低风险' },
+  { seq:'02', name:'（待补充）',      no:'桂0107民初25627号', type:'其他',                         risk:'低风险' },
+  { seq:'03', name:'李姝彦',          no:'沪0101民初7902号',  type:'其他',                         risk:'低风险' },
+  { seq:'04', name:'（待补充）',      no:'沪0101民初37118号', type:'其他',                         risk:'低风险' },
+  { seq:'05', name:'阴瑛',            no:'沪0101民初31027号', type:'笔记/私信/群聊侵权（人格权）', risk:'中风险' },
+  { seq:'06', name:'韩付博',          no:'沪0101民初8959号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'07', name:'（待补充）',      no:'沪0101民初1814号',  type:'服务合同（用户）',             risk:'低风险', hearing:'4月1日 13:45 开庭' },
+  { seq:'08', name:'兰紫煊',          no:'沪0101民初8960号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'09', name:'郑婷',            no:'沪0101民初9059号',  type:'笔记侵权（知产侵权）',         risk:'低风险' },
+  { seq:'10', name:'苏茈澜',          no:'沪0101民初8707号',  type:'服务合同（用户）',             risk:'低风险' },
+  { seq:'11', name:'南京优格斯曼',    no:'沪73民初286号',     type:'商品侵权（知识产权）',         risk:'中风险' },
+  { seq:'12', name:'胡楚觏',          no:'沪0101民初8736号',  type:'笔记/私信/群聊侵权（人格权）', risk:'中风险' },
+  { seq:'13', name:'GOGO TREATS',     no:'沪0101民初8735号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'14', name:'湖南快乐阳光',    no:'沪0101民初8868号',  type:'不正当竞争',                   risk:'高风险' },
+  { seq:'15', name:'谢嘉欣',          no:'沪0101民初8867号',  type:'笔记侵权（知产侵权）',         risk:'中风险' },
+  { seq:'16', name:'上海捡角餐饮',    no:'沪0101民初8950号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'17', name:'WANG KE',         no:'沪0101民初8831号',  type:'服务合同（用户）',             risk:'中风险' },
+  { seq:'18', name:'汪钊',            no:'沪0101民初8902号',  type:'笔记侵权（知产侵权）',         risk:'低风险' },
+  { seq:'19', name:'张丽',            no:'沪0101民初8733号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'20', name:'姚玉洁',          no:'沪0101民初419号',   type:'服务合同（用户）',             risk:'低风险' },
+  { seq:'21', name:'深圳美佳臣商贸',  no:'沪0101民初8696号',  type:'商品侵权（知识产权）',         risk:'中风险' },
+  { seq:'22', name:'余东',            no:'沪0101民初8695号',  type:'商品侵权（知识产权）',         risk:'中风险' },
+  { seq:'23', name:'钟洢柠',          no:'沪0101民初8817号',  type:'服务合同（用户）',             risk:'中风险' },
+  { seq:'24', name:'上海捡角餐饮②',  no:'沪0101民初8949号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
 ];
 
 // ══ Donut SVG ══
@@ -493,14 +514,20 @@ const cases0318 = [
     const hearingBadge = c.hearing
       ? `<span class="tag" style="color:#ff5c6c;border-color:#ff5c6c44;background:#ff5c6c22;margin-left:4px">⏰ ${c.hearing}</span>`
       : '';
+    // 长类型名简化显示
+    const shortType = c.type
+      .replace('笔记/私信/群聊侵权（人格权）','人格权侵权')
+      .replace('笔记侵权（知产侵权）','知产侵权')
+      .replace('商品侵权（知识产权）','商品知产')
+      .replace('服务合同（用户）','服务合同');
     div.innerHTML = `
       <div class="case-seq">${c.seq}</div>
       <div class="case-main">
         <div class="case-name">${c.name}</div>
         <div class="case-no">（2026）${c.no}</div>
       </div>
-      <span class="tag" style="color:${c.tc};border-color:${c.bc};background:${c.bc}">${c.tag}</span>
-      <span class="tag" style="color:${c.rtc};border-color:${c.rbc};background:${c.rbc};margin-left:4px">${c.risk}</span>
+      <span class="tag" style="color:${tc(c.type)};border-color:${bc(c.type)};background:${bc(c.type)}">${shortType}</span>
+      <span class="tag" style="color:${rtc(c.risk)};border-color:${rbc(c.risk)};background:${rbc(c.risk)};margin-left:4px">${c.risk}</span>
       ${hearingBadge}`;
     el.appendChild(div);
   });
