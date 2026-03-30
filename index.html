@@ -180,7 +180,7 @@ footer {
   </div>
   <div class="header-right">
     <div class="pill pill-purple">⚖️ 0317 + 0318 批次</div>
-    <div class="pill pill-blue">🔄 共 70 件</div>
+    <div class="pill pill-blue">🔄 共 24 件</div>
   </div>
 </header>
 
@@ -192,8 +192,8 @@ footer {
       <div class="kpi-icon" style="background:#7c6fff22; color:#7c6fff">📋</div>
       <div class="kpi-title">收案总数</div>
     </div>
-    <div class="kpi-value" style="color:#7c6fff">70</div>
-    <div class="kpi-meta">0317批 46件 &nbsp;+&nbsp; 0318批 24件</div>
+    <div class="kpi-value" style="color:#7c6fff">24</div>
+    <div class="kpi-meta">0件 &nbsp;+&nbsp; 0318批 24件</div>
   </div>
   <div class="kpi">
     <div class="kpi-stripe" style="background:linear-gradient(90deg,#ffc94a,#ff9d3a)"></div>
@@ -201,7 +201,7 @@ footer {
       <div class="kpi-icon" style="background:#ffc94a22; color:#ffc94a">💰</div>
       <div class="kpi-title">已知标的金额</div>
     </div>
-    <div class="kpi-value" style="color:#ffc94a">462 <span style="font-size:18px;font-weight:500">万+</span></div>
+    <div class="kpi-value" style="color:#ffc94a">226 <span style="font-size:18px;font-weight:500">万+</span></div>
     <div class="kpi-meta">来自 17 件有诉请的案件（含 0318 新增 200 万）</div>
   </div>
   <div class="kpi">
@@ -278,50 +278,29 @@ footer {
       <div class="alert-item" style="border-color:#ff5c6c">
         <div class="alert-dot" style="background:#ff5c6c"></div>
         <div class="alert-text">
-          <strong>🔴 高风险！1814号传票 — 明天开庭</strong>
-          沪0101民初1814号，2026年4月1日 13:45，距开庭仅 2 天，请尽快准备应诉材料
+          <strong>🔴 传票！沪0101民初1814号 — 即将开庭</strong>
+          2026年04月01日 13:45（距开庭【2】天）
         </div>
       </div>
       <div class="alert-item" style="border-color:#ff5c6c">
         <div class="alert-dot" style="background:#ff5c6c"></div>
         <div class="alert-text">
-          <strong>🔴 高风险案件！诉请 200 万元</strong>
-          沪0101民初8868号（湖南快乐阳光，著作权/不正当竞争），需优先处理
+          <strong>🔴 高风险！诉请 200 万元</strong>
+          沪0101民初8868号（不正当竞争），需优先处理
         </div>
       </div>
       <div class="alert-item" style="border-color:#ffc94a">
         <div class="alert-dot" style="background:#ffc94a"></div>
         <div class="alert-text">
-          <strong>🟡 8 件中风险，合计约 262 万元诉请</strong>
-          包含沪73民初286号（8万）、8696号（8万）、8695号（5万）等，建议排期审查
-        </div>
-      </div>
-      <div class="alert-item" style="border-color:#ffc94a">
-        <div class="alert-dot" style="background:#ffc94a"></div>
-        <div class="alert-text">
-          <strong>🟡 2 件无PDF，需重新获取</strong>
-          桂0107民初25627号（广西外链已过期）、沪0101民初37118号（无链接）
-        </div>
-      </div>
-      <div class="alert-item" style="border-color:#4facfe">
-        <div class="alert-dot" style="background:#4facfe"></div>
-        <div class="alert-text">
-          <strong>🔵 撤诉案件，可关闭</strong>
-          8682号 — 张馨文已撤诉，被告账号已解封
-        </div>
-      </div>
-      <div class="alert-item" style="border-color:#4facfe">
-        <div class="alert-dot" style="background:#4facfe"></div>
-        <div class="alert-text">
-          <strong>🔵 判决已收到，确认执行</strong>
-          31027号（阴瑛 v. 行吟）— 请确认后续应对计划
+          <strong>🟡 8 件中风险，建议排期审查</strong>
+          请查看 xlsx 中风险明细
         </div>
       </div>
       <div class="alert-item" style="border-color:#38f9a4">
         <div class="alert-dot" style="background:#38f9a4"></div>
         <div class="alert-text">
-          <strong>✅ 0318批次 OCR 已完成</strong>
-          扫描件（8736号、8831号）已通过 Claude 视觉识别补全，完整率提升至 91.7%
+          <strong>✅ 15 件低风险（无金额诉请）</strong>
+          无需紧急处理
         </div>
       </div>
     </div>
@@ -335,12 +314,12 @@ footer {
 <script>
 // ══ 数据 ══
 const typeData = [
-  { label:'人格权侵权',  val:26, color:'#7c6fff' },
-  { label:'服务合同',    val:20, color:'#4facfe' },
-  { label:'知产侵权',    val:10, color:'#38f9a4' },
-  { label:'商品知产',    val:6,  color:'#ff9d3a' },
-  { label:'不正当竞争',  val:3,  color:'#ff5c6c' },
-  { label:'其他',        val:5,  color:'#7a85a8' },
+  { label:'人格权侵权', val:8, color:'#7c6fff' },
+  { label:'服务合同', val:6, color:'#4facfe' },
+  { label:'知产侵权', val:3, color:'#38f9a4' },
+  { label:'商品知产', val:3, color:'#ff9d3a' },
+  { label:'其他', val:3, color:'#7a85a8' },
+  { label:'不正当竞争', val:1, color:'#ff5c6c' },
 ];
 const total = typeData.reduce((s,d)=>s+d.val,0);
 
