@@ -231,6 +231,71 @@ footer {
   padding-top: 16px; border-top: 1px solid var(--border);
 }
 
+
+/* Dark mode */
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --sidebar-bg: #161b27;
+  --surface: #161b27;
+  --surface2: #1e2536;
+  --border: #273049;
+  --accent: #38a169;
+  --accent-light: #1a3a2a;
+  --accent-mid: #4a9e6b;
+  --blue: #4facfe;
+  --blue-light: #1a2a40;
+  --yellow: #ffc94a;
+  --yellow-light: #2a2010;
+  --red: #ff5c6c;
+  --red-light: #2a1018;
+  --orange: #ff9d3a;
+  --orange-light: #2a1a08;
+  --text: #e2e8f8;
+  --text2: #7a85a8;
+  --text3: #4a5580;
+  --shadow: 0 1px 3px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.3), 0 2px 4px rgba(0,0,0,.2);
+}
+
+/* Theme toggle */
+.theme-toggle {
+  margin: 16px 12px 0;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background .2s;
+  user-select: none;
+}
+.theme-toggle:hover { background: var(--border); }
+.theme-toggle-label {
+  font-size: 12px; font-weight: 600; color: var(--text2);
+  display: flex; align-items: center; gap: 8px;
+}
+.toggle-switch {
+  width: 36px; height: 20px;
+  background: var(--border);
+  border-radius: 10px;
+  position: relative;
+  transition: background .25s;
+  flex-shrink: 0;
+}
+.toggle-switch.on { background: var(--accent); }
+.toggle-knob {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: white;
+  transition: transform .25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.toggle-switch.on .toggle-knob { transform: translateX(16px); }
+
 </style>
 </head>
 <body>
@@ -258,6 +323,17 @@ footer {
     <div class="nav-item"><span class="nav-icon">📅</span> 0317 批次 <span class="nav-badge green">46</span></div>
     <div class="nav-item"><span class="nav-icon">📅</span> 0318 批次 <span class="nav-badge green">24</span></div>
     <div class="nav-item"><span class="nav-icon">📅</span> 0330 批次 <span class="nav-badge green">31</span></div>
+  </div>
+
+
+  <div class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+    <div class="theme-toggle-label">
+      <span id="themeIcon">🌙</span>
+      <span id="themeLabel">深色模式</span>
+    </div>
+    <div class="toggle-switch" id="toggleSwitch">
+      <div class="toggle-knob"></div>
+    </div>
   </div>
 
   <div class="sidebar-footer">
@@ -451,7 +527,7 @@ const regionData = [
   { label:'其他省市',   val:7,  max:58 },
 ];
 
-// 批次: 0330  生成时间: 2026-03-31 15:54
+// 批次: 0330  生成时间: 2026-03-31 15:59
 const cases0330 = [
   { seq:'01', name:'张怡婷', no:'沪0101民初7182号', type:'其他', risk:'低风险' },
   { seq:'02', name:'郜文佳', no:'沪0101民初9590号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
@@ -657,6 +733,35 @@ const cases0318 = [
     el.appendChild(div);
   });
 })();
+
+// ══ Theme toggle ══
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    html.removeAttribute('data-theme');
+    document.getElementById('themeIcon').textContent = '🌙';
+    document.getElementById('themeLabel').textContent = '深色模式';
+    document.getElementById('toggleSwitch').classList.remove('on');
+    localStorage.setItem('theme', 'light');
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    document.getElementById('themeIcon').textContent = '☀️';
+    document.getElementById('themeLabel').textContent = '浅色模式';
+    document.getElementById('toggleSwitch').classList.add('on');
+    localStorage.setItem('theme', 'dark');
+  }
+}
+// 记住上次选择
+(function(){
+  if (localStorage.getItem('theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeIcon').textContent = '☀️';
+    document.getElementById('themeLabel').textContent = '浅色模式';
+    document.getElementById('toggleSwitch').classList.add('on');
+  }
+})();
+
 </script>
 </div><!-- /main -->
 </body>
