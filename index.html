@@ -175,12 +175,12 @@ footer {
     </svg>
     <div>
       <h1>诉讼案件管理看板</h1>
-      <p>行吟信息科技（上海）有限公司 &nbsp;·&nbsp; 数据截止 2026-03-30</p>
+      <p>行吟信息科技（上海）有限公司 &nbsp;·&nbsp; 数据截止 2026-03-31</p>
     </div>
   </div>
   <div class="header-right">
     <div class="pill pill-purple">⚖️ 0317 + 0318 批次</div>
-    <div class="pill pill-blue">🔄 共 24 件</div>
+    <div class="pill pill-blue">🔄 共 55 件</div>
   </div>
 </header>
 
@@ -192,7 +192,7 @@ footer {
       <div class="kpi-icon" style="background:#7c6fff22; color:#7c6fff">📋</div>
       <div class="kpi-title">收案总数</div>
     </div>
-    <div class="kpi-value" style="color:#7c6fff">24</div>
+    <div class="kpi-value" style="color:#7c6fff">55</div>
     <div class="kpi-meta">0件 &nbsp;+&nbsp; 0318批 24件</div>
   </div>
   <div class="kpi">
@@ -201,7 +201,7 @@ footer {
       <div class="kpi-icon" style="background:#ffc94a22; color:#ffc94a">💰</div>
       <div class="kpi-title">已知标的金额</div>
     </div>
-    <div class="kpi-value" style="color:#ffc94a">226 <span style="font-size:18px;font-weight:500">万+</span></div>
+    <div class="kpi-value" style="color:#ffc94a">1429 <span style="font-size:18px;font-weight:500">万+</span></div>
     <div class="kpi-meta">来自 17 件有诉请的案件（含 0318 新增 200 万）</div>
   </div>
   <div class="kpi">
@@ -267,7 +267,7 @@ footer {
 
   <!-- 案件明细 -->
   <div class="card">
-    <div class="card-title"><span class="dot" style="background:#7c6fff"></span>案件明细（0318 批次 · 24件）</div>
+    <div class="card-title"><span class="dot" style="background:#7c6fff"></span>案件明细（0330 批次 · 31件）</div>
     <div class="case-scroll" id="caseList"></div>
   </div>
 
@@ -278,28 +278,49 @@ footer {
       <div class="alert-item" style="border-color:#ff5c6c">
         <div class="alert-dot" style="background:#ff5c6c"></div>
         <div class="alert-text">
-          <strong>🔴 传票！沪0101民初1814号 — 即将开庭</strong>
-          2026年04月01日 13:45（距开庭【2】天）
+          <strong>🔴 高风险！诉请 250 万元</strong>
+          苏0115民初2330号（笔记侵权（知产侵权）），需优先处理
         </div>
       </div>
       <div class="alert-item" style="border-color:#ff5c6c">
         <div class="alert-dot" style="background:#ff5c6c"></div>
         <div class="alert-text">
-          <strong>🔴 高风险！诉请 200 万元</strong>
-          沪0101民初8868号（不正当竞争），需优先处理
+          <strong>🔴 高风险！诉请 250 万元</strong>
+          苏0115民初2335号（笔记侵权（知产侵权）），需优先处理
+        </div>
+      </div>
+      <div class="alert-item" style="border-color:#ff5c6c">
+        <div class="alert-dot" style="background:#ff5c6c"></div>
+        <div class="alert-text">
+          <strong>🔴 高风险！诉请 300 万元</strong>
+          苏0115民初2334号（笔记侵权（知产侵权）），需优先处理
+        </div>
+      </div>
+      <div class="alert-item" style="border-color:#ff5c6c">
+        <div class="alert-dot" style="background:#ff5c6c"></div>
+        <div class="alert-text">
+          <strong>🔴 高风险！诉请 150 万元</strong>
+          苏0115民初2336号（笔记侵权（知产侵权）），需优先处理
+        </div>
+      </div>
+      <div class="alert-item" style="border-color:#ff5c6c">
+        <div class="alert-dot" style="background:#ff5c6c"></div>
+        <div class="alert-text">
+          <strong>🔴 高风险！诉请 250 万元</strong>
+          苏0115民初2338号（笔记侵权（知产侵权）），需优先处理
         </div>
       </div>
       <div class="alert-item" style="border-color:#ffc94a">
         <div class="alert-dot" style="background:#ffc94a"></div>
         <div class="alert-text">
-          <strong>🟡 8 件中风险，建议排期审查</strong>
+          <strong>🟡 3 件中风险，建议排期审查</strong>
           请查看 xlsx 中风险明细
         </div>
       </div>
       <div class="alert-item" style="border-color:#38f9a4">
         <div class="alert-dot" style="background:#38f9a4"></div>
         <div class="alert-text">
-          <strong>✅ 15 件低风险（无金额诉请）</strong>
+          <strong>✅ 23 件低风险（无金额诉请）</strong>
           无需紧急处理
         </div>
       </div>
@@ -308,18 +329,18 @@ footer {
 </div>
 
 <footer>
-  数据来源：法院 12368 短信 &nbsp;·&nbsp; 自动化处理 by Case-Automation v2 Skill &nbsp;·&nbsp; 生成于 2026-03-30
+  数据来源：法院 12368 短信 &nbsp;·&nbsp; 自动化处理 by Case-Automation v2 Skill &nbsp;·&nbsp; 生成于 2026-03-31
 </footer>
 
 <script>
 // ══ 数据 ══
 const typeData = [
-  { label:'人格权侵权', val:8, color:'#7c6fff' },
-  { label:'服务合同', val:6, color:'#4facfe' },
-  { label:'知产侵权', val:3, color:'#38f9a4' },
-  { label:'商品知产', val:3, color:'#ff9d3a' },
-  { label:'其他', val:3, color:'#7a85a8' },
-  { label:'不正当竞争', val:1, color:'#ff5c6c' },
+  { label:'其他', val:18, color:'#7a85a8' },
+  { label:'人格权侵权', val:12, color:'#7c6fff' },
+  { label:'知产侵权', val:11, color:'#38f9a4' },
+  { label:'服务合同', val:7, color:'#4facfe' },
+  { label:'商品知产', val:5, color:'#ff9d3a' },
+  { label:'不正当竞争', val:2, color:'#ff5c6c' },
 ];
 const total = typeData.reduce((s,d)=>s+d.val,0);
 
@@ -330,6 +351,41 @@ const regionData = [
   { label:'云南',       val:1,  max:58 },
   { label:'天津',       val:1,  max:58 },
   { label:'其他省市',   val:7,  max:58 },
+];
+
+// 批次: 0330  生成时间: 2026-03-31 12:48
+const cases0330 = [
+  { seq:'01', name:'张怡婷', no:'沪0101民初7182号', type:'其他', risk:'低风险' },
+  { seq:'02', name:'（待补充）', no:'沪0101民初9590号', type:'其他', risk:'低风险' },
+  { seq:'03', name:'邹海燕', no:'沪0101民初7964号', type:'其他', risk:'低风险' },
+  { seq:'04', name:'（待补充）', no:'黑0109民初3526号', type:'其他', risk:'低风险' },
+  { seq:'05', name:'（待补充）', no:'沪0101民初5475号', type:'其他', risk:'低风险' },
+  { seq:'06', name:'北京爱奇艺科技有限公', no:'苏0115民初2330号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'07', name:'隆莉', no:'沪0101民初9591号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'08', name:'（待补充）', no:'粤1302民初37448号', type:'其他', risk:'低风险' },
+  { seq:'09', name:'李岚', no:'沪0101民初9596号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'10', name:'石子涵', no:'沪0101民初9597号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'11', name:'北京爱奇艺科技有限公', no:'苏0115民初2335号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'12', name:'北京爱奇艺科技有限公', no:'苏0115民初2334号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'13', name:'北京爱奇艺科技有限公', no:'苏0115民初2336号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'14', name:'北京爱奇艺科技有限公', no:'苏0115民初2338号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'15', name:'苏州马来熊电子商务有', no:'沪0101民初9598号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'16', name:'（待补充）', no:'沪0101民初5380号', type:'其他', risk:'低风险' },
+  { seq:'17', name:'（待补充）', no:'沪0101民初5381号', type:'其他', risk:'低风险' },
+  { seq:'18', name:'杨亚运', no:'辽0211民初494号', type:'笔记/私信/群聊侵权（人格权）', risk:'中风险' },
+  { seq:'19', name:'武汉范琦珠宝饰品有限', no:'沪0101民初5473号', type:'商品侵权（知识产权）', risk:'低风险' },
+  { seq:'20', name:'深圳减字科技有限公司', no:'沪0101民初7730号', type:'其他', risk:'低风险' },
+  { seq:'21', name:'深圳减字科技有限公司', no:'沪0101民初7731号', type:'其他', risk:'低风险' },
+  { seq:'22', name:'深圳减字科技有限公司', no:'沪0101民初7732号', type:'其他', risk:'低风险' },
+  { seq:'23', name:'深圳减字科技有限公司', no:'沪0101民初7734号', type:'其他', risk:'低风险' },
+  { seq:'24', name:'深圳减字科技有限公司', no:'沪0101民初7733号', type:'其他', risk:'低风险' },
+  { seq:'25', name:'南京轩玺商贸有限公司', no:'沪0101民初7760号', type:'商品侵权（知识产权）', risk:'低风险' },
+  { seq:'26', name:'（待补充）', no:'沪0101民初8278号', type:'服务合同（用户）', risk:'低风险' },
+  { seq:'27', name:'邓浩晨', no:'渝0111民初355号', type:'其他', risk:'低风险' },
+  { seq:'28', name:'（待补充）', no:'浙0105民初1680号', type:'其他', risk:'低风险' },
+  { seq:'29', name:'（待补充）', no:'沪0101民初8893号', type:'不正当竞争', risk:'低风险' },
+  { seq:'30', name:'四川蜀信致远企业管理', no:'沪0101民初8296号', type:'笔记侵权（其他权益）', risk:'中风险' },
+  { seq:'31', name:'天津磨铁图书有限公司', no:'沪0101民初4021号', type:'笔记侵权（知产侵权）', risk:'中风险' },
 ];
 
 // tag 颜色映射（按案件类型）
@@ -478,7 +534,7 @@ const cases0318 = [
 // ══ Case List ══
 (function(){
   const el = document.getElementById('caseList');
-  cases0318.forEach(c => {
+  cases0330.forEach(c => {
     const div = document.createElement('div');
     div.className = 'case-item';
     const hearingBadge = c.hearing
