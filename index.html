@@ -6,19 +6,27 @@
 <title>诉讼案件看板</title>
 <style>
 :root {
-  --bg: #0d1117;
-  --surface: #161b27;
-  --surface2: #1e2536;
-  --border: #273049;
-  --accent: #7c6fff;
-  --blue: #4facfe;
-  --green: #38f9a4;
-  --yellow: #ffc94a;
-  --red: #ff5c6c;
-  --orange: #ff9d3a;
-  --text: #e2e8f8;
-  --text2: #7a85a8;
-  --text3: #4a5580;
+  --bg: #f5f0e8;
+  --sidebar-bg: #ffffff;
+  --surface: #ffffff;
+  --surface2: #f9f6f0;
+  --border: #e8e0d0;
+  --accent: #2d7a4f;
+  --accent-light: #e8f5ee;
+  --accent-mid: #4a9e6b;
+  --blue: #3b7dd8;
+  --blue-light: #eaf1fb;
+  --yellow: #d97706;
+  --yellow-light: #fef3c7;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --orange: #ea580c;
+  --orange-light: #ffedd5;
+  --text: #1a1a1a;
+  --text2: #6b7280;
+  --text3: #9ca3af;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.06), 0 2px 4px rgba(0,0,0,.04);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -26,188 +34,274 @@ body {
   color: var(--text);
   font-family: 'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;
   min-height: 100vh;
-  padding: 28px 32px;
+  display: flex;
   line-height: 1.5;
 }
 
+/* ── Sidebar ── */
+.sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0 16px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sidebar-logo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.sidebar-logo-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--accent); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.sidebar-logo h2 { font-size: 14px; font-weight: 700; color: var(--text); }
+.sidebar-logo p  { font-size: 11px; color: var(--text2); }
+
+.nav-section { padding: 0 12px; margin-bottom: 8px; }
+.nav-section-label {
+  font-size: 10px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .8px;
+  padding: 0 8px; margin-bottom: 4px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 8px;
+  font-size: 13px; color: var(--text2); cursor: pointer;
+  transition: background .15s, color .15s;
+  margin-bottom: 2px;
+}
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+.nav-icon { font-size: 15px; width: 20px; text-align: center; }
+.nav-badge {
+  margin-left: auto; background: var(--red); color: white;
+  font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px;
+}
+.nav-badge.green { background: var(--accent); }
+
+.sidebar-footer {
+  margin-top: auto; padding: 16px 20px 0;
+  border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--text3);
+}
+
+/* ── Main content ── */
+.main {
+  flex: 1;
+  padding: 28px 28px 32px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
 /* Header */
-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 32px;
+.page-header {
+  margin-bottom: 24px;
 }
-.logo { display: flex; align-items: center; gap: 12px; }
-.logo svg { width: 36px; height: 36px; }
-.logo h1 { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: .5px; }
-.logo p  { font-size: 12px; color: var(--text2); margin-top: 2px; }
-.header-right { display: flex; gap: 10px; align-items: center; }
-.pill {
-  padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
-  border: 1px solid; cursor: default;
-}
-.pill-purple { color: var(--accent); border-color: #7c6fff44; background: #7c6fff18; }
-.pill-blue   { color: var(--blue);   border-color: #4facfe44; background: #4facfe18; }
+.page-header h1 { font-size: 22px; font-weight: 800; color: var(--text); }
+.page-header p  { font-size: 13px; color: var(--text2); margin-top: 2px; }
 
 /* KPI Grid */
-.kpi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 18px; }
 .kpi {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; padding: 22px 20px;
-  position: relative; overflow: hidden; cursor: default;
-  transition: border-color .2s, transform .2s;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  transition: box-shadow .2s, transform .2s;
+  cursor: default;
 }
-.kpi:hover { border-color: #3d4d72; transform: translateY(-2px); }
-.kpi-stripe {
-  position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 16px 16px 0 0;
-}
-.kpi-head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.kpi:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.kpi-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+.kpi-title { font-size: 12px; color: var(--text2); font-weight: 500; letter-spacing:.2px; }
 .kpi-icon {
-  width: 36px; height: 36px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center; font-size: 16px;
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 17px;
+  flex-shrink: 0;
 }
-.kpi-title { font-size: 12px; color: var(--text2); font-weight: 600; letter-spacing: .4px; }
-.kpi-value { font-size: 36px; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+.kpi-value { font-size: 32px; font-weight: 900; line-height: 1; margin-bottom: 6px; color: var(--text); }
 .kpi-meta  { font-size: 11px; color: var(--text2); }
 
-/* Main Grid: 3 columns */
-.row { display: grid; gap: 16px; margin-bottom: 16px; }
+/* Main Grid */
+.row { display: grid; gap: 14px; margin-bottom: 14px; }
 .row-3 { grid-template-columns: 1fr 1fr 1.2fr; }
 .row-2 { grid-template-columns: 2fr 1fr; }
 
 .card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow);
 }
 .card-title {
   font-size: 12px; font-weight: 700; color: var(--text2);
-  text-transform: uppercase; letter-spacing: 1px;
-  margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+  text-transform: uppercase; letter-spacing: .8px;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
 }
 .card-title span.dot {
-  width: 3px; height: 14px; border-radius: 2px; display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0;
 }
 
-/* Donut Chart (SVG) */
+/* Donut */
 .donut-container { display: flex; align-items: center; gap: 20px; }
 .donut-wrap { flex-shrink: 0; }
-.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 7px; }
 .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .legend-label { color: var(--text2); flex: 1; }
 .legend-val { font-weight: 700; color: var(--text); }
-.legend-pct { font-size: 10px; color: var(--text3); min-width: 32px; text-align: right; }
+.legend-pct { font-size: 10px; color: var(--text3); min-width: 30px; text-align: right; }
 
-/* Horizontal bar */
+/* Hbar */
 .hbar-list { display: flex; flex-direction: column; gap: 10px; }
 .hbar-item { }
 .hbar-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; display: flex; justify-content: space-between; }
 .hbar-label span { color: var(--text); font-weight: 600; }
-.hbar-track { background: var(--surface2); border-radius: 4px; height: 7px; overflow: hidden; }
+.hbar-track { background: var(--surface2); border-radius: 4px; height: 6px; overflow: hidden; }
 .hbar-fill { height: 100%; border-radius: 4px; }
 
-/* Batch progress */
-.batch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+/* Batch */
+.batch-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
 .batch-box {
-  background: var(--surface2); border-radius: 12px; padding: 16px; text-align: center;
+  background: var(--surface2); border-radius: 10px; padding: 14px 12px; text-align: center;
   border: 1px solid var(--border);
 }
-.batch-num { font-size: 34px; font-weight: 900; line-height: 1; margin: 6px 0; }
-.batch-label { font-size: 11px; color: var(--text2); }
-.batch-sub { font-size: 11px; color: var(--text2); margin-top: 4px; }
-.prog-track { background: var(--border); border-radius: 3px; height: 5px; margin: 8px 0 4px; overflow: hidden; }
+.batch-num { font-size: 28px; font-weight: 900; line-height: 1; margin: 4px 0; }
+.batch-label { font-size: 11px; color: var(--text2); font-weight: 600; }
+.batch-sub { font-size: 10px; color: var(--text3); margin-top: 3px; }
+.prog-track { background: var(--border); border-radius: 3px; height: 4px; margin: 7px 0 3px; overflow: hidden; }
 .prog-fill { height: 100%; border-radius: 3px; }
 .prog-pct { font-size: 10px; color: var(--text3); }
 
-/* Stacked bar */
-.stacked-row { display: flex; flex-direction: column; gap: 12px; }
-.stacked-item { }
-.stacked-label { font-size: 12px; color: var(--text2); margin-bottom: 5px; }
-.stacked-bar { display: flex; height: 20px; border-radius: 6px; overflow: hidden; gap: 1px; }
+/* Stacked */
+.stacked-row { display: flex; flex-direction: column; gap: 10px; }
+.stacked-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.stacked-bar { display: flex; height: 18px; border-radius: 6px; overflow: hidden; gap: 1px; }
 .stacked-seg { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: white; transition: flex .6s; }
 
 /* Case list */
 .case-scroll { max-height: 340px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 .case-item {
   display: flex; align-items: center; gap: 10px;
-  padding: 9px 10px; border-radius: 8px; margin-bottom: 5px;
-  background: var(--surface2); transition: background .15s; cursor: default;
+  padding: 9px 10px; border-radius: 8px; margin-bottom: 4px;
+  border: 1px solid var(--border);
+  transition: background .15s; cursor: default;
 }
-.case-item:hover { background: var(--border); }
+.case-item:hover { background: var(--surface2); }
 .case-seq {
-  min-width: 26px; height: 26px; border-radius: 50%;
-  background: #7c6fff33; color: var(--accent);
+  min-width: 26px; height: 26px; border-radius: 8px;
+  background: var(--accent-light); color: var(--accent);
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 800;
+  font-size: 11px; font-weight: 800; flex-shrink: 0;
 }
 .case-main { flex: 1; min-width: 0; }
 .case-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .case-no   { font-size: 10px; color: var(--text2); }
 .tag {
-  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px;
-  white-space: nowrap; border: 1px solid;
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 6px;
+  white-space: nowrap; border: 1px solid; flex-shrink: 0;
 }
 
-/* Alert list */
+/* Alert */
 .alert-list { display: flex; flex-direction: column; gap: 8px; }
 .alert-item {
-  display: flex; gap: 10px; padding: 11px 14px;
+  display: flex; gap: 10px; padding: 10px 12px;
   background: var(--surface2); border-radius: 10px; font-size: 12px;
-  border-left: 3px solid;
+  border-left: 3px solid; border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
 }
-.alert-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.alert-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
 .alert-text { color: var(--text2); }
-.alert-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+.alert-text strong { color: var(--text); display: block; margin-bottom: 2px; font-size: 12px; }
 
 footer {
-  text-align: center; color: var(--text3); font-size: 11px; margin-top: 24px;
+  text-align: center; color: var(--text3); font-size: 11px; margin-top: 20px;
   padding-top: 16px; border-top: 1px solid var(--border);
 }
+
 </style>
 </head>
 <body>
 
-<!-- Header -->
-<header>
-  <div class="logo">
-    <svg viewBox="0 0 36 36" fill="none">
-      <rect width="36" height="36" rx="10" fill="#7c6fff22"/>
-      <path d="M8 26 L18 10 L28 26" stroke="#7c6fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <path d="M12 21 L24 21" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-    </svg>
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">⚖️</div>
     <div>
-      <h1>诉讼案件管理看板</h1>
-      <p>行吟信息科技（上海）有限公司 &nbsp;·&nbsp; 数据截止 2026-03-31</p>
+      <h2>诉讼看板</h2>
+      <p>行吟信息科技</p>
     </div>
   </div>
-  <div class="header-right"></div>
-</header>
+
+  <div class="nav-section">
+    <div class="nav-section-label">主菜单</div>
+    <div class="nav-item active"><span class="nav-icon">📊</span> 总览仪表盘</div>
+    <div class="nav-item"><span class="nav-icon">📁</span> 案件明细</div>
+    <div class="nav-item"><span class="nav-icon">⏰</span> 开庭提醒 <span class="nav-badge">1</span></div>
+    <div class="nav-item"><span class="nav-icon">🔴</span> 高风险案件 <span class="nav-badge">5</span></div>
+  </div>
+
+  <div class="nav-section" style="margin-top:8px">
+    <div class="nav-section-label">批次</div>
+    <div class="nav-item"><span class="nav-icon">📅</span> 0317 批次 <span class="nav-badge green">46</span></div>
+    <div class="nav-item"><span class="nav-icon">📅</span> 0318 批次 <span class="nav-badge green">24</span></div>
+    <div class="nav-item"><span class="nav-icon">📅</span> 0330 批次 <span class="nav-badge green">31</span></div>
+  </div>
+
+  <div class="sidebar-footer">
+    数据截止 2026-03-31<br>
+    Case-Automation v2
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+
+<!-- Page Header -->
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <p>仪表盘 — 诉讼案件总览</p>
+</div>
 
 <!-- KPI -->
 <div class="kpi-grid">
   <div class="kpi">
-    <div class="kpi-stripe" style="background:linear-gradient(90deg,#7c6fff,#4facfe)"></div>
+    <div class="kpi-stripe" style="background:linear-gradient(90deg,var(--accent),var(--accent-mid))"></div>
     <div class="kpi-head">
-      <div class="kpi-icon" style="background:#7c6fff22; color:#7c6fff">📋</div>
+      <div class="kpi-icon" style="background:var(--accent-light); color:var(--accent)">📋</div>
       <div class="kpi-title">收案总数</div>
     </div>
-    <div class="kpi-value" style="color:#7c6fff">101</div>
+    <div class="kpi-value" style="color:var(--accent)">101</div>
     <div class="kpi-meta">0317批 46件 &nbsp;·&nbsp; 0318批 24件 &nbsp;·&nbsp; 0330批 31件</div>
   </div>
   <div class="kpi">
-    <div class="kpi-stripe" style="background:linear-gradient(90deg,#ffc94a,#ff9d3a)"></div>
+    <div class="kpi-stripe" style="background:linear-gradient(90deg,var(--yellow),var(--orange))"></div>
     <div class="kpi-head">
-      <div class="kpi-icon" style="background:#ffc94a22; color:#ffc94a">💰</div>
+      <div class="kpi-icon" style="background:var(--yellow-light); color:var(--yellow)">💰</div>
       <div class="kpi-title">已知标的金额</div>
     </div>
-    <div class="kpi-value" style="color:#ffc94a">1429 <span style="font-size:18px;font-weight:500">万+</span></div>
+    <div class="kpi-value" style="color:var(--yellow)">1429 <span style="font-size:18px;font-weight:500">万+</span></div>
     <div class="kpi-meta">来自 17 件有诉请的案件（含 0318 新增 200 万）</div>
   </div>
   <div class="kpi">
-    <div class="kpi-stripe" style="background:linear-gradient(90deg,#38f9a4,#4facfe)"></div>
+    <div class="kpi-stripe" style="background:linear-gradient(90deg,var(--blue),var(--accent-mid))"></div>
     <div class="kpi-head">
-      <div class="kpi-icon" style="background:#38f9a422; color:#38f9a4">🏛️</div>
+      <div class="kpi-icon" style="background:var(--blue-light); color:var(--blue)">🏛️</div>
       <div class="kpi-title">涉及法院数</div>
     </div>
-    <div class="kpi-value" style="color:#38f9a4">12</div>
+    <div class="kpi-value" style="color:var(--accent-mid)">12</div>
     <div class="kpi-meta">横跨 8 个省市，上海为主</div>
   </div>
 </div>
@@ -217,12 +311,12 @@ footer {
 
   <!-- 案件类型分布 -->
   <div class="card">
-    <div class="card-title"><span class="dot" style="background:#7c6fff"></span>案件类型分布</div>
+    <div class="card-title"><span class="dot" style="background:var(--accent)"></span>案件类型分布</div>
     <div class="donut-container">
       <!-- SVG Donut -->
       <div class="donut-wrap">
         <svg width="120" height="120" viewBox="0 0 120 120" id="donutSvg">
-          <circle cx="60" cy="60" r="48" fill="none" stroke="#1e2536" stroke-width="20"/>
+          <circle cx="60" cy="60" r="48" fill="none" stroke="#f0ebe0" stroke-width="20"/>
         </svg>
       </div>
       <div class="donut-legend" id="donutLegend"></div>
@@ -231,37 +325,37 @@ footer {
 
   <!-- 地区分布 -->
   <div class="card">
-    <div class="card-title"><span class="dot" style="background:#4facfe"></span>地区分布</div>
+    <div class="card-title"><span class="dot" style="background:var(--blue)"></span>地区分布</div>
     <div class="hbar-list" id="regionBars"></div>
   </div>
 
   <!-- 批次进度 + 案件状态 -->
   <div class="card">
-    <div class="card-title"><span class="dot" style="background:#38f9a4"></span>批次处理进度</div>
+    <div class="card-title"><span class="dot" style="background:#4a9e6b"></span>批次处理进度</div>
     <div class="batch-row">
       <div class="batch-box">
         <div class="batch-label">0317 批次</div>
-        <div class="batch-num" style="color:#7c6fff">46</div>
+        <div class="batch-num" style="color:var(--accent)">46</div>
         <div class="batch-sub">原告覆盖 32 / 46</div>
-        <div class="prog-track"><div class="prog-fill" style="width:69.6%;background:linear-gradient(90deg,#7c6fff,#4facfe)"></div></div>
+        <div class="prog-track"><div class="prog-fill" style="width:69.6%;background:linear-gradient(90deg,var(--accent),var(--accent-mid))"></div></div>
         <div class="prog-pct">完整率 69.6%</div>
       </div>
       <div class="batch-box">
         <div class="batch-label">0318 批次</div>
-        <div class="batch-num" style="color:#4facfe">24</div>
+        <div class="batch-num" style="color:var(--blue)">24</div>
         <div class="batch-sub">原告覆盖 22 / 24</div>
-        <div class="prog-track"><div class="prog-fill" style="width:91.7%;background:linear-gradient(90deg,#4facfe,#38f9a4)"></div></div>
+        <div class="prog-track"><div class="prog-fill" style="width:91.7%;background:linear-gradient(90deg,var(--blue),var(--accent-mid))"></div></div>
         <div class="prog-pct">完整率 91.7%</div>
       </div>
       <div class="batch-box">
         <div class="batch-label">0330 批次</div>
-        <div class="batch-num" style="color:#38f9a4">31</div>
+        <div class="batch-num" style="color:var(--accent-mid)">31</div>
         <div class="batch-sub">原告覆盖 24 / 31</div>
-        <div class="prog-track"><div class="prog-fill" style="width:77.4%;background:linear-gradient(90deg,#38f9a4,#ffc94a)"></div></div>
+        <div class="prog-track"><div class="prog-fill" style="width:77.4%;background:linear-gradient(90deg,var(--accent-mid),var(--yellow))"></div></div>
         <div class="prog-pct">完整率 77.4%</div>
       </div>
     </div>
-    <div class="card-title" style="margin-top:4px"><span class="dot" style="background:#ffc94a"></span>案件状态</div>
+    <div class="card-title" style="margin-top:4px"><span class="dot" style="background:#d97706"></span>案件状态</div>
     <div class="stacked-row" id="stackedBars"></div>
   </div>
 </div>
@@ -271,13 +365,13 @@ footer {
 
   <!-- 案件明细 -->
   <div class="card">
-    <div class="card-title"><span class="dot" style="background:#7c6fff"></span>案件明细（0330 批次 · 31件）</div>
+    <div class="card-title"><span class="dot" style="background:var(--accent)"></span>案件明细（0330 批次 · 31件）</div>
     <div class="case-scroll" id="caseList"></div>
   </div>
 
   <!-- 待处理 -->
   <div class="card">
-    <div class="card-title"><span class="dot" style="background:#ff5c6c"></span>需关注事项</div>
+    <div class="card-title"><span class="dot" style="background:#dc2626"></span>需关注事项</div>
     <div class="alert-list">
       <div class="alert-item" style="border-color:#ff5c6c">
         <div class="alert-dot" style="background:#ff5c6c"></div>
@@ -357,7 +451,7 @@ const regionData = [
   { label:'其他省市',   val:7,  max:58 },
 ];
 
-// 批次: 0330  生成时间: 2026-03-31 13:17
+// 批次: 0330  生成时间: 2026-03-31 15:54
 const cases0330 = [
   { seq:'01', name:'张怡婷', no:'沪0101民初7182号', type:'其他', risk:'低风险' },
   { seq:'02', name:'郜文佳', no:'沪0101民初9590号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
@@ -394,19 +488,20 @@ const cases0330 = [
 
 // tag 颜色映射（按案件类型）
 const TYPE_COLOR = {
-  '服务合同（用户）':          ['#4facfe','#4facfe22'],
-  '笔记/私信/群聊侵权（人格权）': ['#7c6fff','#7c6fff22'],
-  '笔记侵权（知产侵权）':      ['#38f9a4','#38f9a422'],
-  '商品侵权（知识产权）':      ['#ff9d3a','#ff9d3a22'],
-  '不正当竞争':                ['#ff5c6c','#ff5c6c22'],
-  '网购合同纠纷':              ['#ffc94a','#ffc94a22'],
-  '服务合同（商家）':          ['#4facfe','#4facfe44'],
-  '其他':                      ['#7a85a8','#7a85a844'],
+  '服务合同（用户）':          ['#3b7dd8','#eaf1fb'],
+  '笔记/私信/群聊侵权（人格权）': ['#2d7a4f','#e8f5ee'],
+  '笔记侵权（知产侵权）':      ['#4a9e6b','#e8f5ee'],
+  '商品侵权（知识产权）':      ['#ea580c','#ffedd5'],
+  '不正当竞争':                ['#dc2626','#fee2e2'],
+  '网购合同纠纷':              ['#d97706','#fef3c7'],
+  '服务合同（商家）':          ['#3b7dd8','#dbeafe'],
+  '笔记侵权（其他权益）':      ['#4a9e6b','#dcfce7'],
+  '其他':                      ['#9ca3af','#f3f4f6'],
 };
 const RISK_COLOR = {
-  '高风险': ['#ff5c6c','#ff5c6c22'],
-  '中风险': ['#ffc94a','#ffc94a22'],
-  '低风险': ['#38f9a4','#38f9a422'],
+  '高风险': ['#dc2626','#fee2e2'],
+  '中风险': ['#d97706','#fef3c7'],
+  '低风险': ['#4a9e6b','#e8f5ee'],
 };
 function tc(type){ return (TYPE_COLOR[type]||TYPE_COLOR['其他'])[0]; }
 function bc(type){ return (TYPE_COLOR[type]||TYPE_COLOR['其他'])[1]; }
@@ -466,13 +561,13 @@ const cases0318 = [
   // 中心文字
   const t1 = document.createElementNS('http://www.w3.org/2000/svg','text');
   t1.setAttribute('x','60'); t1.setAttribute('y','56');
-  t1.setAttribute('text-anchor','middle'); t1.setAttribute('fill','#e2e8f8');
+  t1.setAttribute('text-anchor','middle'); t1.setAttribute('fill','#1a1a1a');
   t1.setAttribute('font-size','18'); t1.setAttribute('font-weight','800');
   t1.textContent = '70';
   svg.appendChild(t1);
   const t2 = document.createElementNS('http://www.w3.org/2000/svg','text');
   t2.setAttribute('x','60'); t2.setAttribute('y','70');
-  t2.setAttribute('text-anchor','middle'); t2.setAttribute('fill','#7a85a8');
+  t2.setAttribute('text-anchor','middle'); t2.setAttribute('fill','#9ca3af');
   t2.setAttribute('font-size','9');
   t2.textContent = '总案件';
   svg.appendChild(t2);
@@ -494,7 +589,7 @@ const cases0318 = [
 // ══ Region bars ══
 (function(){
   const el = document.getElementById('regionBars');
-  const colors = ['#7c6fff','#4facfe','#38f9a4','#ffc94a','#ff9d3a','#7a85a8'];
+  const colors = ['#2d7a4f','#4a9e6b','#3b7dd8','#d97706','#ea580c','#9ca3af'];
   regionData.forEach((d,i) => {
     const pct = Math.round(d.val/d.max*100);
     el.innerHTML += `
@@ -522,14 +617,14 @@ const cases0318 = [
       <div class="stacked-item">
         <div class="stacked-label">${b.label}（${b.total}件）</div>
         <div class="stacked-bar">
-          <div class="stacked-seg" style="flex:${b.complete};background:#38f9a488">${b.complete}</div>
-          ${b.missing?`<div class="stacked-seg" style="flex:${b.missing};background:#ffc94a88">${b.missing}</div>`:''}
-          ${b.nopdf?`<div class="stacked-seg" style="flex:${b.nopdf};background:#ff5c6c88">${b.nopdf}</div>`:''}
+          <div class="stacked-seg" style="flex:${b.complete};background:#4a9e6b">${b.complete}</div>
+          ${b.missing?`<div class="stacked-seg" style="flex:${b.missing};background:#d97706">${b.missing}</div>`:''}
+          ${b.nopdf?`<div class="stacked-seg" style="flex:${b.nopdf};background:#dc2626">${b.nopdf}</div>`:''}
         </div>
         <div style="display:flex;gap:10px;margin-top:4px;font-size:10px;color:var(--text2)">
-          <span style="color:#38f9a4">■ 完整 ${b.complete}</span>
-          <span style="color:#ffc94a">■ 缺原告 ${b.missing}</span>
-          ${b.nopdf?`<span style="color:#ff5c6c">■ 无PDF ${b.nopdf}</span>`:''}
+          <span style="color:var(--accent-mid)">■ 完整 ${b.complete}</span>
+          <span style="color:var(--yellow)">■ 缺原告 ${b.missing}</span>
+          ${b.nopdf?`<span style="color:#dc2626">■ 无PDF ${b.nopdf}</span>`:''}
         </div>
       </div>`;
   });
@@ -563,5 +658,6 @@ const cases0318 = [
   });
 })();
 </script>
+</div><!-- /main -->
 </body>
 </html>
