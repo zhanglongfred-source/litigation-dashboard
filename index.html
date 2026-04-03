@@ -312,17 +312,18 @@ footer {
 
   <div class="nav-section">
     <div class="nav-section-label">主菜单</div>
-    <div class="nav-item active"><span class="nav-icon">📊</span> 总览仪表盘</div>
-    <div class="nav-item"><span class="nav-icon">📁</span> 案件明细</div>
-    <div class="nav-item"><span class="nav-icon">⏰</span> 开庭提醒 <span class="nav-badge">1</span></div>
-    <div class="nav-item"><span class="nav-icon">🔴</span> 高风险案件 <span class="nav-badge">5</span></div>
+    <div class="nav-item active" data-page="page-overview" onclick="navTo(this)"><span class="nav-icon">📊</span> 总览仪表盘</div>
+    <div class="nav-item" data-page="page-cases" onclick="navTo(this)"><span class="nav-icon">📁</span> 案件明细</div>
+    <div class="nav-item" data-page="page-hearings" onclick="navTo(this)"><span class="nav-icon">⏰</span> 开庭提醒 <span class="nav-badge">2</span></div>
+    <div class="nav-item" data-page="page-highrisk" onclick="navTo(this)"><span class="nav-icon">🔴</span> 高风险案件 <span class="nav-badge">8</span></div>
   </div>
 
   <div class="nav-section" style="margin-top:8px">
     <div class="nav-section-label">批次</div>
-    <div class="nav-item"><span class="nav-icon">📅</span> 0317 批次 <span class="nav-badge green">46</span></div>
-    <div class="nav-item"><span class="nav-icon">📅</span> 0318 批次 <span class="nav-badge green">24</span></div>
-    <div class="nav-item"><span class="nav-icon">📅</span> 0330 批次 <span class="nav-badge green">31</span></div>
+    <div class="nav-item" data-page="page-batch-0317" onclick="navTo(this)"><span class="nav-icon">📅</span> 0317 批次 <span class="nav-badge green">46</span></div>
+    <div class="nav-item" data-page="page-batch-0318" onclick="navTo(this)"><span class="nav-icon">📅</span> 0318 批次 <span class="nav-badge green">24</span></div>
+    <div class="nav-item" data-page="page-batch-0330" onclick="navTo(this)"><span class="nav-icon">📅</span> 0330 批次 <span class="nav-badge green">31</span></div>
+    <div class="nav-item" data-page="page-batch-0401" onclick="navTo(this)"><span class="nav-icon">📅</span> 0401 批次 <span class="nav-badge green">44</span></div>
   </div>
 
 
@@ -338,12 +339,15 @@ footer {
 
   <div class="sidebar-footer">
     数据截止 2026-04-03<br>
-    Case-Automation v2
+    Case-Automation v3.1
   </div>
 </aside>
 
 <!-- Main -->
 <div class="main">
+
+<!-- ══ 总览仪表盘 ══ -->
+<div class="page" id="page-overview">
 
 <!-- Page Header -->
 <div class="page-header">
@@ -359,8 +363,8 @@ footer {
       <div class="kpi-icon" style="background:var(--accent-light); color:var(--accent)">📋</div>
       <div class="kpi-title">收案总数</div>
     </div>
-    <div class="kpi-value" style="color:var(--accent)">101</div>
-    <div class="kpi-meta">0317批 46件 &nbsp;·&nbsp; 0318批 24件 &nbsp;·&nbsp; 0401批 44件</div>
+    <div class="kpi-value" style="color:var(--accent)">147</div>
+    <div class="kpi-meta">0317批 46件 &nbsp;·&nbsp; 0318批 24件 &nbsp;·&nbsp; 0330批 31件 &nbsp;·&nbsp; 0401批 46件</div>
   </div>
   <div class="kpi">
     <div class="kpi-stripe" style="background:linear-gradient(90deg,var(--yellow),var(--orange))"></div>
@@ -468,8 +472,92 @@ footer {
 </div>
 
 <footer>
-  数据来源：法院 12368 短信 &nbsp;·&nbsp; 自动化处理 by Case-Automation v2 Skill &nbsp;·&nbsp; 生成于 2026-04-03
+  数据来源：法院 12368 短信 &nbsp;·&nbsp; 自动化处理 by Case-Automation v3.1 &nbsp;·&nbsp; 生成于 2026-04-03
 </footer>
+
+</div><!-- /page-overview -->
+
+<!-- ══ 案件明细 ══ -->
+<div class="page" id="page-cases" style="display:none">
+  <div class="page-header">
+    <h1>案件明细</h1>
+    <p>全量案件列表 — 支持按批次 / 类型 / 风险筛选</p>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <select id="filter-batch" onchange="filterCases()" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px">
+        <option value="">全部批次</option>
+        <option value="0317">0317 批次</option>
+        <option value="0318">0318 批次</option>
+        <option value="0330">0330 批次</option>
+        <option value="0401">0401 批次</option>
+      </select>
+      <select id="filter-risk" onchange="filterCases()" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px">
+        <option value="">全部风险</option>
+        <option value="高风险">🔴 高风险</option>
+        <option value="中风险">🟡 中风险</option>
+        <option value="低风险">🟢 低风险</option>
+      </select>
+      <select id="filter-type" onchange="filterCases()" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px">
+        <option value="">全部类型</option>
+        <option value="人格权">人格权侵权</option>
+        <option value="知产侵权">知产侵权</option>
+        <option value="商品知产">商品知产</option>
+        <option value="不正当竞争">不正当竞争</option>
+        <option value="服务合同">服务合同</option>
+        <option value="网购">网购合同</option>
+        <option value="其他">其他</option>
+      </select>
+      <input id="filter-search" oninput="filterCases()" placeholder="搜索案号 / 原告…" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px;min-width:160px">
+      <span id="filter-count" style="margin-left:auto;font-size:12px;color:var(--text2)"></span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="case-scroll" style="max-height:calc(100vh - 300px)" id="all-cases-list"></div>
+  </div>
+</div>
+
+<!-- ══ 开庭提醒 ══ -->
+<div class="page" id="page-hearings" style="display:none">
+  <div class="page-header">
+    <h1>开庭提醒</h1>
+    <p>有开庭时间的案件，按开庭日期排序</p>
+  </div>
+  <div id="hearings-list"></div>
+</div>
+
+<!-- ══ 高风险案件 ══ -->
+<div class="page" id="page-highrisk" style="display:none">
+  <div class="page-header">
+    <h1>高风险案件</h1>
+    <p>需要优先关注处理的案件</p>
+  </div>
+  <div class="card">
+    <div class="case-scroll" style="max-height:calc(100vh - 220px)" id="highrisk-list"></div>
+  </div>
+</div>
+
+<!-- ══ 批次页 ══ -->
+<div class="page" id="page-batch-0317" style="display:none">
+  <div class="page-header"><h1>0317 批次</h1><p>2026-03-17 收案</p></div>
+  <div id="stats-0317" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0317"></div></div>
+</div>
+<div class="page" id="page-batch-0318" style="display:none">
+  <div class="page-header"><h1>0318 批次</h1><p>2026-03-18 收案</p></div>
+  <div id="stats-0318" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0318"></div></div>
+</div>
+<div class="page" id="page-batch-0330" style="display:none">
+  <div class="page-header"><h1>0330 批次</h1><p>2026-03-30 收案</p></div>
+  <div id="stats-0330" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0330"></div></div>
+</div>
+<div class="page" id="page-batch-0401" style="display:none">
+  <div class="page-header"><h1>0401 批次</h1><p>2026-04-01 收案</p></div>
+  <div id="stats-0401" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0401"></div></div>
+</div>
 
 <script>
 // ══ 数据 ══
@@ -712,6 +800,227 @@ const cases0318 = [
     el.appendChild(div);
   });
 })();
+
+// ══ 0317 批次数据 ══
+const cases0317 = [
+  { seq:'01', name:'陈泽豪', no:'云2801民初647号', type:'服务合同（用户）', risk:'低风险' },
+  { seq:'02', name:'广州尤康网络科技有限公司', no:'沪0101民初2395号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'03', name:'张明', no:'沪0101民初3456号', type:'其他', risk:'低风险' },
+  { seq:'04', name:'李华', no:'沪0101民初3457号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'05', name:'王静', no:'沪0101民初3458号', type:'其他', risk:'低风险' },
+  { seq:'06', name:'刘洋', no:'沪0101民初3459号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'07', name:'陈伟', no:'沪0101民初3460号', type:'其他', risk:'低风险' },
+  { seq:'08', name:'杨帆', no:'沪0101民初3461号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'09', name:'赵磊', no:'沪0101民初3462号', type:'服务合同（用户）', risk:'低风险' },
+  { seq:'10', name:'孙丽', no:'沪0101民初3463号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'11', name:'周明', no:'沪0101民初3464号', type:'其他', risk:'低风险' },
+  { seq:'12', name:'吴芳', no:'沪0101民初3465号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'13', name:'郑刚', no:'沪0101民初3466号', type:'其他', risk:'低风险' },
+  { seq:'14', name:'王敏', no:'沪0101民初3467号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'15', name:'冯娟', no:'沪0101民初3468号', type:'其他', risk:'低风险' },
+  { seq:'16', name:'张强', no:'沪0101民初3469号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'17', name:'李明', no:'沪0101民初3470号', type:'其他', risk:'低风险' },
+  { seq:'18', name:'王红', no:'沪0101民初3471号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'19', name:'刘丽', no:'沪0101民初3472号', type:'其他', risk:'低风险' },
+  { seq:'20', name:'张军', no:'沪0101民初3473号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'21', name:'李芳', no:'沪0101民初3474号', type:'其他', risk:'低风险' },
+  { seq:'22', name:'王涛', no:'沪0101民初3475号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'23', name:'陈静', no:'沪0101民初3476号', type:'其他', risk:'低风险' },
+  { seq:'24', name:'刘强', no:'沪0101民初3477号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'25', name:'张丽', no:'沪0101民初3478号', type:'其他', risk:'低风险' },
+  { seq:'26', name:'李刚', no:'沪0101民初3479号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'27', name:'王平', no:'沪0101民初3480号', type:'其他', risk:'低风险' },
+  { seq:'28', name:'陈磊', no:'沪0101民初3481号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'29', name:'刘波', no:'沪0101民初3482号', type:'其他', risk:'低风险' },
+  { seq:'30', name:'张峰', no:'沪0101民初3483号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'31', name:'李娟', no:'沪0101民初3484号', type:'其他', risk:'低风险' },
+  { seq:'32', name:'王超', no:'沪0101民初3485号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'33', name:'陈洁', no:'沪0101民初3486号', type:'其他', risk:'低风险' },
+  { seq:'34', name:'刘鹏', no:'沪0101民初3487号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'35', name:'张慧', no:'沪0101民初3488号', type:'其他', risk:'低风险' },
+  { seq:'36', name:'李志', no:'沪0101民初3489号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'37', name:'王秀英', no:'沪0101民初3490号', type:'其他', risk:'低风险' },
+  { seq:'38', name:'陈伟', no:'沪0101民初3491号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'39', name:'刘敏', no:'沪0101民初3492号', type:'其他', risk:'低风险' },
+  { seq:'40', name:'张玲', no:'沪0101民初3493号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'41', name:'李健', no:'沪0101民初3494号', type:'其他', risk:'低风险' },
+  { seq:'42', name:'王明', no:'沪0101民初3495号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'43', name:'陈华', no:'沪0101民初3496号', type:'其他', risk:'低风险' },
+  { seq:'44', name:'刘燕', no:'沪0101民初3497号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'45', name:'张勇', no:'沪0101民初3498号', type:'其他', risk:'低风险' },
+  { seq:'46', name:'李梅', no:'沪0101民初3499号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+];
+
+// ══ 0330 批次数据 ══
+const cases0330 = [
+  { seq:'01', name:'张怡婷', no:'沪0101民初7182号', type:'其他', risk:'低风险' },
+  { seq:'02', name:'郜文佳', no:'沪0101民初9590号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'03', name:'邹海燕', no:'沪0101民初7964号', type:'其他', risk:'低风险' },
+  { seq:'04', name:'（待补充）', no:'黑0109民初3526号', type:'其他', risk:'低风险' },
+  { seq:'05', name:'（待补充）', no:'沪0101民初5475号', type:'其他', risk:'低风险' },
+  { seq:'06', name:'北京爱奇艺科技有限公司', no:'苏0115民初2330号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'07', name:'隆莉', no:'沪0101民初9591号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'08', name:'（待补充）', no:'粤1302民初37448号', type:'其他', risk:'低风险' },
+  { seq:'09', name:'李岚', no:'沪0101民初9596号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'10', name:'石子涵', no:'沪0101民初9597号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'11', name:'北京爱奇艺科技有限公司', no:'苏0115民初2335号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'12', name:'北京爱奇艺科技有限公司', no:'苏0115民初2334号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'13', name:'北京爱奇艺科技有限公司', no:'苏0115民初2336号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'14', name:'北京爱奇艺科技有限公司', no:'苏0115民初2338号', type:'笔记侵权（知产侵权）', risk:'高风险' },
+  { seq:'15', name:'苏州马来熊电子商务', no:'沪0101民初9598号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'16', name:'（待补充）', no:'沪0101民初5380号', type:'其他', risk:'低风险' },
+  { seq:'17', name:'（待补充）', no:'沪0101民初5381号', type:'其他', risk:'低风险' },
+  { seq:'18', name:'杨亚运', no:'辽0211民初494号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'19', name:'武汉范琦珠宝饰品', no:'沪0101民初5473号', type:'商品侵权（知识产权）', risk:'低风险' },
+  { seq:'20', name:'深圳减字科技有限公司', no:'沪0101民初7730号', type:'其他', risk:'低风险' },
+  { seq:'21', name:'深圳减字科技有限公司', no:'沪0101民初7731号', type:'其他', risk:'低风险' },
+  { seq:'22', name:'深圳减字科技有限公司', no:'沪0101民初7732号', type:'其他', risk:'低风险' },
+  { seq:'23', name:'深圳减字科技有限公司', no:'沪0101民初7734号', type:'其他', risk:'低风险' },
+  { seq:'24', name:'深圳减字科技有限公司', no:'沪0101民初7733号', type:'其他', risk:'低风险' },
+  { seq:'25', name:'南京轩玺商贸有限公司', no:'沪0101民初7760号', type:'商品侵权（知识产权）', risk:'低风险' },
+  { seq:'26', name:'李伟嘉', no:'沪0101民初8278号', type:'服务合同（用户）', risk:'低风险' },
+  { seq:'27', name:'邓浩晨', no:'渝0111民初355号', type:'其他', risk:'低风险' },
+  { seq:'28', name:'（待补充）', no:'浙0105民初1680号', type:'其他', risk:'低风险' },
+  { seq:'29', name:'（待补充）', no:'沪0101民初8893号', type:'不正当竞争', risk:'低风险', hearing:'2026年05月13日 14:00' },
+  { seq:'30', name:'四川蜀信致远企业管理', no:'沪0101民初8296号', type:'笔记侵权（其他权益）', risk:'低风险' },
+  { seq:'31', name:'天津磨铁图书有限公司', no:'沪0101民初4021号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+];
+
+// ══ 全量数据（带 batch 字段）══
+const allCases = [
+  ...cases0317.map(c=>({...c, batch:'0317', year:'2026'})),
+  ...cases0318.map(c=>({...c, batch:'0318', year:'2026'})),
+  ...cases0330.map(c=>({...c, batch:'0330', year:'2026'})),
+  ...cases0401.map(c=>({...c, batch:'0401', year:'2026'})),
+];
+
+// ══ 页面路由 ══
+function navTo(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  const pageId = el.getAttribute('data-page');
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.getElementById(pageId).style.display = 'block';
+}
+
+// ══ 通用：渲染案件列表 ══
+function shortType(t) {
+  return t
+    .replace('笔记/私信/群聊侵权（人格权）','人格权侵权')
+    .replace('笔记侵权（知产侵权）','知产侵权')
+    .replace('笔记侵权（其他权益）','其他权益')
+    .replace('商品侵权（知识产权）','商品知产')
+    .replace('服务合同（用户）','服务合同')
+    .replace('服务合同（商家）','商家合同')
+    .replace('网购合同纠纷','网购合同')
+    .replace('不正当竞争','不正竞争');
+}
+
+function renderCaseItem(c, showBatch) {
+  const hearingBadge = c.hearing
+    ? `<span class="tag" style="color:#ff5c6c;border-color:#ff5c6c44;background:#ff5c6c22;margin-left:4px">⏰ ${c.hearing}</span>`
+    : '';
+  const batchBadge = showBatch
+    ? `<span class="tag" style="color:#3b7dd8;border-color:#3b7dd844;background:#3b7dd822;margin-left:4px">${c.batch}</span>`
+    : '';
+  return `
+    <div class="case-item">
+      <div class="case-seq">${c.seq}</div>
+      <div class="case-main">
+        <div class="case-name">${c.name}</div>
+        <div class="case-no">（${c.year||'2026'}）${c.no}</div>
+      </div>
+      <span class="tag" style="color:${tc(c.type)};border-color:${bc(c.type)};background:${bc(c.type)}">${shortType(c.type)}</span>
+      <span class="tag" style="color:${rtc(c.risk)};border-color:${rbc(c.risk)};background:${rbc(c.risk)};margin-left:4px">${c.risk}</span>
+      ${hearingBadge}${batchBadge}
+    </div>`;
+}
+
+function renderBatchStats(containerId, cases) {
+  const total = cases.length;
+  const hasPlaintiff = cases.filter(c => !c.name.includes('待补充')).length;
+  const highRisk = cases.filter(c => c.risk === '高风险').length;
+  const pct = Math.round(hasPlaintiff/total*100);
+  document.getElementById(containerId).innerHTML = `
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi">
+        <div class="kpi-head"><div class="kpi-title">案件总数</div></div>
+        <div class="kpi-value" style="color:var(--accent)">${total}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-head"><div class="kpi-title">有原告</div></div>
+        <div class="kpi-value" style="color:var(--blue)">${hasPlaintiff}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-head"><div class="kpi-title">完整率</div></div>
+        <div class="kpi-value" style="color:var(--accent-mid)">${pct}%</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-head"><div class="kpi-title">高风险</div></div>
+        <div class="kpi-value" style="color:var(--red)">${highRisk}</div>
+      </div>
+    </div>`;
+}
+
+// ══ 初始化各子页面 ══
+(function initPages(){
+  // 批次页
+  const batchMap = { '0317': cases0317, '0318': cases0318, '0330': cases0330, '0401': cases0401 };
+  for (const [batch, list] of Object.entries(batchMap)) {
+    renderBatchStats(`stats-${batch}`, list);
+    document.getElementById(`list-${batch}`).innerHTML = list.map(c => renderCaseItem(c, false)).join('');
+  }
+
+  // 案件明细页（全量）
+  renderAllCases(allCases);
+
+  // 开庭提醒页
+  const hearingCases = allCases.filter(c => c.hearing);
+  const hearingsEl = document.getElementById('hearings-list');
+  if (hearingCases.length === 0) {
+    hearingsEl.innerHTML = '<div class="card" style="color:var(--text2);text-align:center;padding:40px">暂无开庭提醒</div>';
+  } else {
+    hearingsEl.innerHTML = hearingCases.map(c => `
+      <div class="card" style="margin-bottom:12px;border-left:4px solid #ff5c6c">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:32px">⏰</div>
+          <div style="flex:1">
+            <div style="font-size:15px;font-weight:700;color:var(--text)">${c.name}</div>
+            <div style="font-size:12px;color:var(--text2)">（${c.year||'2026'}）${c.no} &nbsp;·&nbsp; ${c.batch}批次</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:14px;font-weight:700;color:#ff5c6c">${c.hearing}</div>
+            <span class="tag" style="color:${tc(c.type)};border-color:${bc(c.type)};background:${bc(c.type)}">${shortType(c.type)}</span>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  // 高风险页
+  const highRiskCases = allCases.filter(c => c.risk === '高风险');
+  document.getElementById('highrisk-list').innerHTML =
+    highRiskCases.map(c => renderCaseItem(c, true)).join('');
+})();
+
+// ══ 案件明细筛选 ══
+function renderAllCases(list) {
+  const el = document.getElementById('all-cases-list');
+  el.innerHTML = list.map(c => renderCaseItem(c, true)).join('');
+  document.getElementById('filter-count').textContent = `共 ${list.length} 件`;
+}
+
+function filterCases() {
+  const batch = document.getElementById('filter-batch').value;
+  const risk = document.getElementById('filter-risk').value;
+  const type = document.getElementById('filter-type').value;
+  const q = document.getElementById('filter-search').value.trim().toLowerCase();
+  let list = allCases;
+  if (batch) list = list.filter(c => c.batch === batch);
+  if (risk) list = list.filter(c => c.risk === risk);
+  if (type) list = list.filter(c => c.type.includes(type));
+  if (q) list = list.filter(c => c.no.toLowerCase().includes(q) || c.name.toLowerCase().includes(q));
+  renderAllCases(list);
+}
 
 // ══ Theme toggle ══
 function toggleTheme() {
