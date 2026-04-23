@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+  <link rel="icon" href="https://picasso-static.xiaohongshu.com/fe-platform/49d0aa573e1b645939ee59afef61f774d4a25652.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>诉讼案件看板</title>
@@ -296,6 +297,69 @@ footer {
 }
 .toggle-switch.on .toggle-knob { transform: translateX(16px); }
 
+
+  /* ── 宽娱案件抽屉 ── */
+  .k-drawer-overlay {
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:900;
+  }
+  .k-drawer-overlay.open { display:block; }
+  .k-drawer {
+    position:fixed; top:0; right:0; bottom:0; width:640px; max-width:95vw;
+    background:#fff; z-index:901; overflow-y:auto;
+    box-shadow:-4px 0 32px rgba(0,0,0,.18);
+    transform:translateX(100%); transition:transform .25s ease;
+  }
+  .k-drawer.open { transform:translateX(0); }
+  .k-drawer-head {
+    background:#0D0D0D; padding:28px 32px 24px;
+    position:sticky; top:0; z-index:1;
+  }
+  .k-drawer-eyebrow { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#CC3030; margin-bottom:8px; }
+  .k-drawer-title { font-size:22px; font-weight:800; color:#fff; letter-spacing:-.5px; line-height:1.2; margin-bottom:16px; }
+  .k-drawer-tags { display:flex; flex-wrap:wrap; gap:6px; }
+  .k-drawer-tag { padding:3px 10px; border-radius:3px; font-size:11px; background:rgba(255,255,255,.1); color:rgba(255,255,255,.75); }
+  .k-drawer-close {
+    position:absolute; top:20px; right:24px;
+    background:rgba(255,255,255,.1); border:none; color:#fff;
+    width:32px; height:32px; border-radius:50%; cursor:pointer;
+    font-size:18px; display:flex; align-items:center; justify-content:center;
+    transition:background .15s;
+  }
+  .k-drawer-close:hover { background:rgba(255,255,255,.2); }
+  .k-drawer-body { padding:24px 32px 48px; }
+  .k-sec { margin-bottom:28px; }
+  .k-sec-title {
+    font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+    color:#999; padding-bottom:10px; border-bottom:1px solid #e8e8e8; margin-bottom:14px;
+  }
+  .k-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .k-info-card { background:#f5f5f5; border-radius:6px; padding:12px 16px; }
+  .k-info-label { font-size:10px; color:#999; margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px; }
+  .k-info-val { font-size:13px; font-weight:600; color:#0d0d0d; line-height:1.5; }
+  .k-info-card.full { grid-column:1/-1; }
+  .k-claims { border:1px solid #e8e8e8; border-radius:6px; overflow:hidden; }
+  .k-claim-row { display:flex; gap:10px; padding:12px 16px; border-bottom:1px solid #e8e8e8; font-size:13px; color:#555; line-height:1.6; }
+  .k-claim-row:last-child { border-bottom:none; }
+  .k-claim-num { color:#CC3030; font-weight:700; flex-shrink:0; font-size:12px; margin-top:1px; }
+  .k-facts { display:flex; flex-direction:column; gap:7px; }
+  .k-fact { background:#f5f5f5; border-radius:6px; padding:11px 16px; font-size:13px; color:#555; line-height:1.6; display:flex; gap:8px; }
+  .k-fact-dot { width:5px; height:5px; border-radius:50%; background:#999; flex-shrink:0; margin-top:6px; }
+  .k-risks { display:flex; flex-direction:column; gap:7px; }
+  .k-risk { background:#fff5f5; border:1px solid #f5c5c5; border-radius:6px; padding:11px 16px; font-size:13px; color:#8b1010; line-height:1.6; display:flex; gap:8px; }
+  .k-risk.warn { background:#fff8f0; border-color:#ffd9a8; color:#7a4010; }
+  .k-risk-dot { width:5px; height:5px; border-radius:50%; background:#CC3030; flex-shrink:0; margin-top:6px; }
+  .k-risk.warn .k-risk-dot { background:#e07020; }
+  .k-stage { display:flex; align-items:center; gap:0; padding:20px 0 4px; }
+  .k-stage-col { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; }
+  .k-stage-col::after { content:''; position:absolute; left:50%; right:-50%; top:4px; height:2px; background:#e8e8e8; z-index:0; }
+  .k-stage-col:last-child::after { display:none; }
+  .k-stage-col.done::after { background:#CC3030; }
+  .k-stage-dot { width:10px; height:10px; border-radius:50%; border:2px solid #e8e8e8; background:#fff; z-index:1; }
+  .k-stage-dot.done { background:#CC3030; border-color:#CC3030; }
+  .k-stage-dot.current { background:#fff; border-color:#CC3030; box-shadow:0 0 0 3px #fee; }
+  .k-stage-label { font-size:10px; color:#999; margin-top:6px; white-space:nowrap; }
+  .k-stage-label.done, .k-stage-label.current { color:#CC3030; }
+  .k-stage-label.current { font-weight:700; }
 </style>
 </head>
 <body>
@@ -314,26 +378,30 @@ footer {
     <div class="nav-section-label">主菜单</div>
     <div class="nav-item active" data-page="page-overview" onclick="navTo(this)"><span class="nav-icon">📊</span> 总览仪表盘</div>
     <div class="nav-item" data-page="page-cases" onclick="navTo(this)"><span class="nav-icon">📁</span> 案件明细</div>
-    <div class="nav-item" data-page="page-hearings" onclick="navTo(this)"><span class="nav-icon">⏰</span> 开庭提醒 <span class="nav-badge">2</span></div>
-    <div class="nav-item" data-page="page-highrisk" onclick="navTo(this)"><span class="nav-icon">🔴</span> 高风险案件 <span class="nav-badge">8</span></div>
+    <div class="nav-item" data-page="page-hearings" onclick="navTo(this)"><span class="nav-icon">⏰</span> 开庭提醒 <span class="nav-badge">13</span></div>
+    <div class="nav-item" data-page="page-highrisk" onclick="navTo(this)"><span class="nav-icon">🔴</span> 高风险案件 <span class="nav-badge">14</span></div>
   </div>
 
   <div class="nav-section" style="margin-top:8px">
-    <div class="nav-section-label">批次</div>
-    <!-- 超出6个的旧批次，折叠区 -->
-    <div id="batch-older-wrapper" style="display:none;overflow:hidden;transition:max-height 0.3s ease">
-      <!-- 旧批次动态插入 -->
+    <div class="nav-section-label" style="display:flex;align-items:center;justify-content:space-between;">
+      批次
+      <span id="batch-toggle-btn" onclick="toggleOldBatches()" style="cursor:pointer;font-size:11px;color:#888;font-weight:normal;padding:1px 6px;border-radius:4px;background:rgba(128,128,128,0.12);transition:all .2s;">更早 ▸</span>
     </div>
-    <div id="batch-older-toggle" style="display:none;padding:4px 12px 4px 14px;font-size:11px;color:var(--text2);cursor:pointer;user-select:none" onclick="toggleOlderBatches()">
-      <span id="batch-older-arrow">▶</span> <span id="batch-older-label">展开更早批次</span>
-    </div>
-    <!-- 最新6个批次 -->
-    <div id="batch-recent-list">
+    <!-- 折叠区：较早批次（0317~0414+0408new），默认收起 -->
+    <div id="old-batches" style="display:none;overflow:hidden;">
       <div class="nav-item" data-page="page-batch-0317" onclick="navTo(this)"><span class="nav-icon">📅</span> 0317 批次 <span class="nav-badge green">46</span></div>
       <div class="nav-item" data-page="page-batch-0318" onclick="navTo(this)"><span class="nav-icon">📅</span> 0318 批次 <span class="nav-badge green">24</span></div>
       <div class="nav-item" data-page="page-batch-0330" onclick="navTo(this)"><span class="nav-icon">📅</span> 0330 批次 <span class="nav-badge green">31</span></div>
       <div class="nav-item" data-page="page-batch-0401" onclick="navTo(this)"><span class="nav-icon">📅</span> 0401 批次 <span class="nav-badge green">44</span></div>
+      <div class="nav-item" data-page="page-batch-0408new" onclick="navTo(this)"><span class="nav-icon">📅</span> 0408new 批次 <span class="nav-badge green">33</span></div>
     </div>
+    <!-- 最新6个批次，按时间从旧到新排列 -->
+    <div class="nav-item" data-page="page-batch-0414" onclick="navTo(this)"><span class="nav-icon">📅</span> 0414 批次 <span class="nav-badge green">14</span></div>
+    <div class="nav-item" data-page="page-batch-0415" onclick="navTo(this)"><span class="nav-icon">📅</span> 0415 批次 <span class="nav-badge green">31</span></div>
+    <div class="nav-item" data-page="page-batch-0416" onclick="navTo(this)"><span class="nav-icon">📅</span> 0416 批次 <span class="nav-badge green">38</span></div>
+    <div class="nav-item" data-page="page-batch-0417" onclick="navTo(this)"><span class="nav-icon">📅</span> 0417 批次 <span class="nav-badge green">37</span></div>
+    <div class="nav-item" data-page="page-batch-0420" onclick="navTo(this)"><span class="nav-icon">📅</span> 0420 批次 <span class="nav-badge green">46</span></div>
+    <div class="nav-item" data-page="page-batch-0421" onclick="navTo(this)"><span class="nav-icon">📅</span> 0421 批次 <span class="nav-badge green">31</span></div>
   </div>
 
 
@@ -373,7 +441,7 @@ footer {
       <div class="kpi-icon" style="background:var(--accent-light); color:var(--accent)">📋</div>
       <div class="kpi-title">收案总数</div>
     </div>
-    <div class="kpi-value" style="color:var(--accent)">147</div>
+    <div class="kpi-value" style="color:var(--accent)">243</div>
     <div class="kpi-meta">0317批 46件 &nbsp;·&nbsp; 0318批 24件 &nbsp;·&nbsp; 0422批 4件</div>
   </div>
   <div class="kpi">
@@ -494,6 +562,13 @@ footer {
         <option value="0318">0318 批次</option>
         <option value="0330">0330 批次</option>
         <option value="0401">0401 批次</option>
+        <option value="0414">0414 批次</option>
+        <option value="0415">0415 批次</option>
+        <option value="0416">0416 批次</option>
+        <option value="0417">0417 批次</option>
+        <option value="0420">0420 批次</option>
+        <option value="0421">0421 批次</option>
+        <option value="0408new">0408new 批次</option>
       </select>
       <select id="filter-risk" onchange="filterCases()" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px">
         <option value="">全部风险</option>
@@ -561,78 +636,183 @@ footer {
   <div id="stats-0401" style="margin-bottom:14px"></div>
   <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0401"></div></div>
 </div>
+<div class="page" id="page-batch-0415" style="display:none">
+  <div class="page-header"><h1>0415 批次</h1><p>2026-04-15 收案</p></div>
+  <div id="stats-0415" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0415"></div></div>
+</div>
 
+
+<div class="page" id="page-batch-0414" style="display:none">
+  <div class="page-header"><h1>0414 批次</h1><p>2026-04-14 收案</p></div>
+  <div id="stats-0414" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0414"></div></div>
+</div>
+
+<div class="page" id="page-batch-0416" style="display:none">
+  <div class="page-header"><h1>0416 批次</h1><p>2026-04-16 收案</p></div>
+  <div id="stats-0416" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0416"></div></div>
+</div>
+
+<div class="page" id="page-batch-0417" style="display:none">
+  <div class="page-header"><h1>0417 批次</h1><p>2026-04-17 收案</p></div>
+  <div id="stats-0417" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0417"></div></div>
+</div>
+
+<div class="page" id="page-batch-0420" style="display:none">
+  <div class="page-header"><h1>0420 批次</h1><p>2026-04-20 收案</p></div>
+  <div id="stats-0420" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0420"></div></div>
+</div>
+
+<div class="page" id="page-batch-0421" style="display:none">
+  <div class="page-header"><h1>0421 批次</h1><p>2026-04-21 收案</p></div>
+  <div id="stats-0421" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0421"></div></div>
+</div>
+
+
+<div class="page" id="page-batch-0408new" style="display:none">
+  <div class="page-header"><h1>0408new 批次</h1><p>2026-04-08new 收案</p></div>
+  <div id="stats-0408new" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0408new"></div></div>
+</div>
 <script>
-// ══ 数据 ══
+// ══ \u6570\u636e ══
+
+// ══ \u4e0a\u6d77\u5bbd\u5a31\u4e09\u6848\uff08\u91cd\u70b9\u6848\u4ef6\uff09══
+// \u4e0a\u6d77\u5bbd\u5a31\u4e09\u6848\u6570\u636e
+const casesKuanyu = [
+  { seq:'K1', year:'2025', batch:'kuanyu', name:'\u4e0a\u6d77\u5bbd\u5a31\u6570\u7801\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'2025-\u8bc9\u5b571243', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u9ad8\u98ce\u9669', detail:'\u6d89\u6848\u4f5c\u54c1\u300a\u7267\u795e\u8bb0\u300b·\u7d22\u8d54500\u4e07\u5143·\u8bc1\u636e\u6838\u5b9e\u4e2d', kuanyuId:'' },
+  { seq:'K2', year:'2025', batch:'kuanyu', name:'\u4e0a\u6d77\u5bbd\u5a31\u6570\u7801\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'2025-\u8bc9\u5b571244', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u9ad8\u98ce\u9669', detail:'\u6d89\u6848\u4f5c\u54c1\u300a\u5929\u5b98\u8d50\u798f\u300b·\u7d22\u8d54500\u4e07\u5143·\u8bc1\u636e\u6838\u5b9e\u4e2d', kuanyuId:'' },
+  { seq:'K3', year:'2025', batch:'kuanyu', name:'\u4e0a\u6d77\u5bbd\u5a31\u6570\u7801\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'2025-\u8bc9\u5b571245', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u9ad8\u98ce\u9669', detail:'\u6d89\u6848\u4f5c\u54c1\u300a\u4e2d\u56fd\u5947\u8c2d\u300b·\u7d22\u8d54500\u4e07\u5143·\u8bc1\u636e\u6838\u5b9e\u4e2d⚠️\u6743\u5229\u57fa\u7840\u7279\u6b8a', kuanyuId:'' },
+  { seq:'T1', year:'2025', batch:'kuanyu', name:'\u6df1\u5733\u5e02\u817e\u8baf\u8ba1\u7b97\u673a\u7cfb\u7edf\u6709\u9650\u516c\u53f8\u7b49', no:'(2025)\u82cf05\u6c11\u521d145\u53f7', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u9ad8\u98ce\u9669', detail:'\u6d89\u6848\u4f5c\u54c1\u300a\u4e0e\u51e4\u884c\u300b·\u7d22\u8d541800\u4e07·⚠️\u4e00\u5ba1\u5df2\u5224\u8d54241.8\u4e07·\u817e\u8baf\u4e0a\u8bc9\u4e2d', kuanyuId:'' },
+  { seq:'T2', year:'2025', batch:'kuanyu', name:'\u6df1\u5733\u5e02\u817e\u8baf\u8ba1\u7b97\u673a\u7cfb\u7edf\u6709\u9650\u516c\u53f8\u7b49', no:'(2025)\u6caa01\u6c11\u521d452\u53f7', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u9ad8\u98ce\u9669', detail:'\u6d89\u6848\u4f5c\u54c1\u300a\u7389\u9aa8\u9065\u300b·\u7d22\u8d545000\u4e07·⚠️\u4e00\u5ba1\u4ec5\u5224\u8d545000\u5143·\u817e\u8baf\u4e0a\u8bc9\u4e2d', kuanyuId:'' },
+  { seq:'T3', year:'2025', batch:'kuanyu', name:'\u817e\u8baf\u79d1\u6280\uff08\u5317\u4eac\uff09\u6709\u9650\u516c\u53f8\u7b49', no:'(2025)\u82cf02\u6c11\u521d445\u53f7', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u9ad8\u98ce\u9669', detail:'\u6d89\u6848\u4f5c\u54c1\u300a\u957f\u76f8\u601d\u300b\u7b2c\u4e00\u3001\u4e8c\u5b63·\u7d22\u8d543418\u4e07·⚠️\u4e00\u5ba1\u5224\u8d541000\u4e07·\u817e\u8baf\u4e0a\u8bc9\u4e2d', kuanyuId:'' },
+];
+
+// \u4e09\u6848\u5b8c\u6574\u5206\u6790\u6570\u636e
+const KUANYU_DETAIL = {
+  mushenjie: {},
+  tianguancifu: {},
+  zhongguoqitan: {},
+  yufengxing: {},
+  yuguyao: {},
+  changxiangsi: {},
+};
+
+
 const typeData = [
   { label:'其他', val:4, color:'#7a85a8' },
 ];
 const total = typeData.reduce((s,d)=>s+d.val,0);
 
 const regionData = [
-  { label:'上海黄浦区', val:58, max:58 },
-  { label:'广西',       val:2,  max:58 },
-  { label:'上海知产院', val:1,  max:58 },
-  { label:'云南',       val:1,  max:58 },
-  { label:'天津',       val:1,  max:58 },
-  { label:'其他省市',   val:7,  max:58 },
+  { label:'\u4e0a\u6d77\u9ec4\u6d66\u533a', val:58, max:83 },
+  { label:'\u5e7f\u897f',       val:2,  max:83 },
+  { label:'\u4e0a\u6d77\u77e5\u4ea7\u9662', val:1,  max:83 },
+  { label:'\u4e91\u5357',       val:1,  max:83 },
+  { label:'\u5929\u6d25',       val:1,  max:83 },
+  { label:'\u5176\u4ed6\u7701\u5e02',   val:7,  max:83 },
 ];
 
-// 批次: 0422  生成时间: 2026-04-23 14:48
-const cases0422 = [
-  { seq:'01', name:'徐熙 榕', no:'沪0104民初10228号', type:'其他', risk:'低风险' },
-  { seq:'02', name:'（待补充）', no:'沪0101民初10759号', type:'其他', risk:'低风险' },
-  { seq:'03', name:'（待补充）', no:'沪0101民初11869号', type:'其他', risk:'低风险' },
-  { seq:'04', name:'北京乘风直上咨询有限', no:'沪0101民初11739号', type:'其他', risk:'低风险' },
+// \u6279\u6b21: 0401  \u751f\u6210\u65f6\u95f4: 2026-04-03 10:58
+const cases0401 = [
+  { seq:'01', name:'\u65b0\u6d6a\u7f51\u6280\u672f\uff08\u4e2d\u56fd\uff09\u6709', no:'\u6caa73\u6c11\u521d101\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'02', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d5475\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'03', name:'\u4faf\u9f99\u70c1', no:'\u6caa0101\u6c11\u521d8609\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'04', name:'\u6768\u829d\u5f64', no:'\u6caa0101\u6c11\u521d5379\u53f7', type:'\u4e0d\u6b63\u5f53\u7ade\u4e89', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7404\u670827\u65e5 14:00' },
+  { seq:'05', name:'\u674e\u601d\u6866', no:'\u6caa0101\u6c11\u521d5441\u53f7', type:'\u4e0d\u6b63\u5f53\u7ade\u4e89', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7404\u670827\u65e5 14:45' },
+  { seq:'06', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d1467\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'07', name:'\u674e\u5929\u5b87', no:'\u76960102\u6c11\u521d816\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'08', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d1814\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'09', name:'\u65b0\u6d6a\u7f51\u6280\u672f\uff08\u4e2d\u56fd\uff09\u6709', no:'\u6caa73\u6c11\u521d99\u53f7', type:'\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09', risk:'\u9ad8\u98ce\u9669' },
+  { seq:'10', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d4578\u53f7', type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7404\u670827\u65e5 09:30' },
+  { seq:'11', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d4839\u53f7', type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'12', name:'\u8a79\u9038\u51e1', no:'\u6caa0101\u6c11\u521d8976\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'13', name:'\u5f90\u5dde\u6c5f\u6f6d\u6708\u7f51\u7edc\u79d1\u6280\u6709', no:'\u6caa0101\u6c11\u521d9451\u53f7', type:'\u7f51\u8d2d\u5408\u540c\u7ea0\u7eb7', risk:'\u4f4e\u98ce\u9669' , year:'2026', hearing:'2026\u5e7405\u670820\u65e5 14:30'},
+  { seq:'14', name:'\u6cb3\u5357\u767e\u901a\u6559\u80b2\u79d1\u6280\u6709\u9650', no:'\u6caa0101\u6c11\u521d910\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'15', name:'\u8521\u6668\u5b87', no:'\u6caa0101\u6c11\u521d8939\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7404\u670820\u65e5 09:15' },
+  { seq:'16', name:'\u897f\u5c71\u533a\u5fd7\u6f58\u5546\u8d38\u5546\u884c\u7ecf', no:'\u6caa0101\u6c11\u521d9094\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7404\u670822\u65e5 14:00' },
+  { seq:'17', name:'\u65e0\u9521\u54c1\u5566\u6587\u5316\u521b\u610f\u6709\u9650', no:'\u6caa0101\u6c11\u521d8937\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'18', name:'\u6c6a\u828a\u597d', no:'\u6caa0101\u6c11\u521d9570\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'19', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6e580111\u6c11\u521d3874\u53f7', type:'\u4e0d\u6b63\u5f53\u7ade\u4e89', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7404\u670809\u65e5 10:00' },
+  { seq:'20', name:'\u4e0a\u6d77\u7c73\u54c8\u6e38\u5929\u547d\u79d1\u6280\u6709', no:'\u6caa0101\u6c11\u521d7751\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'21', name:'\u54c8\u5c14\u6ee8\u4fcf\u7f8e\u4eba\u533b\u7597\u5668\u68b0', no:'\u9ed10102\u6c11\u521d24013\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'22', name:'\u676d\u5dde\u878d\u9e4f\u6559\u80b2\u79d1\u6280\u6709\u9650', no:'\u6caa0101\u6c11\u521d34288\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'23', name:'\u5434\u6c5f\u533a\u540c\u91cc\u9547\u5c0f\u4e3d\u5de5\u827a', no:'\u6caa0101\u6c11\u521d9028\u53f7', type:'\u670d\u52a1\u5408\u540c\uff08\u5546\u5bb6\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'24', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6d590192\u6c11\u521d1742\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'25', name:'\u4e2d\u5357\u535a\u96c6\u5929\u5377\u6587\u5316\u4f20\u5a92', no:'\u6caa0101\u6c11\u521d2052\u53f7', type:'\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'26', name:'\u5f20\u4e3d', no:'\u6caa0101\u6c11\u521d8734\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'27', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d25920\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'28', name:'\u6caa\u4e0a\u963f\u59e8\uff08\u4e0a\u6d77\uff09\u5b9e\u4e1a', no:'\u6caa0101\u6c11\u521d3756\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'29', name:'\u8303\u56f4\u56f4', no:'\u6caa0101\u6c11\u521d8911\u53f7', type:'\u7f51\u8d2d\u5408\u540c\u7ea0\u7eb7', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'30', name:'\u9a6c\u60a6', no:'\u96550103\u6c11\u521d2073\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'31', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d2682\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'32', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d5903\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'33', name:'\u5f20\u5a67\u9752', no:'\u6caa0107\u6c11\u521d9207\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u5176\u4ed6\u6743\u76ca\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'34', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0105\u6c11\u521d37685\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7404\u670824\u65e5 15:15' },
+  { seq:'35', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u4eac0116\u6c11\u521d3842\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'36', name:'\u9ec4\u7b71\u6e49', no:'\u82cf0505\u6c11\u521d20439\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'37', name:'\u91cd\u5e86\u4f18\u6f2b\u7f51\u7edc\u79d1\u6280\u6709\u9650', no:'\u6e1d0192\u6c11\u521d18990\u53f7', type:'\u4e0d\u6b63\u5f53\u7ade\u4e89', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7405\u670807\u65e5 09:30' },
+  { seq:'38', name:'\u91cd\u5e86\u4f18\u6f2b\u7f51\u7edc\u79d1\u6280\u6709\u9650', no:'\u6e1d0192\u6c11\u521d19000\u53f7', type:'\u4e0d\u6b63\u5f53\u7ade\u4e89', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'39', name:'\u8d75\u6625\u96c4', no:'\u6caa0101\u6c11\u521d9454\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'40', name:'\u623f\u865e\u6e05', no:'\u6caa0101\u6c11\u521d9450\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u5176\u4ed6\u6743\u76ca\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'41', name:'\u6768\u9896\u6d01', no:'\u6caa0101\u6c11\u521d9359\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u5176\u4ed6\u6743\u76ca\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'42', name:'\u5434\u7d2b\u971e', no:'\u6caa0101\u6c11\u521d9457\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'43', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d1249\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'44', name:'\u674e\u4f1f\u6c11', no:'\u6caa0101\u6c11\u521d6828\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
 ];
 
-// tag 颜色映射（按案件类型）
+// tag \u989c\u8272\u6620\u5c04\uff08\u6309\u6848\u4ef6\u7c7b\u578b\uff09
 const TYPE_COLOR = {
-  '服务合同（用户）':          ['#3b7dd8','#eaf1fb'],
-  '笔记/私信/群聊侵权（人格权）': ['#2d7a4f','#e8f5ee'],
-  '笔记侵权（知产侵权）':      ['#4a9e6b','#e8f5ee'],
-  '商品侵权（知识产权）':      ['#ea580c','#ffedd5'],
-  '不正当竞争':                ['#dc2626','#fee2e2'],
-  '网购合同纠纷':              ['#d97706','#fef3c7'],
-  '服务合同（商家）':          ['#3b7dd8','#dbeafe'],
-  '笔记侵权（其他权益）':      ['#4a9e6b','#dcfce7'],
-  '其他':                      ['#9ca3af','#f3f4f6'],
+  '\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09':          ['#3b7dd8','#eaf1fb'],
+  '\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09': ['#2d7a4f','#e8f5ee'],
+  '\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09':      ['#4a9e6b','#e8f5ee'],
+  '\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09':      ['#ea580c','#ffedd5'],
+  '\u4e0d\u6b63\u5f53\u7ade\u4e89':                ['#dc2626','#fee2e2'],
+  '\u7f51\u8d2d\u5408\u540c\u7ea0\u7eb7':              ['#d97706','#fef3c7'],
+  '\u670d\u52a1\u5408\u540c\uff08\u5546\u5bb6\uff09':          ['#3b7dd8','#dbeafe'],
+  '\u7b14\u8bb0\u4fb5\u6743\uff08\u5176\u4ed6\u6743\u76ca\uff09':      ['#4a9e6b','#dcfce7'],
+  '\u5176\u4ed6':                      ['#9ca3af','#f3f4f6'],
 };
 const RISK_COLOR = {
-  '高风险': ['#dc2626','#fee2e2'],
-  '中风险': ['#d97706','#fef3c7'],
-  '低风险': ['#4a9e6b','#e8f5ee'],
+  '\u9ad8\u98ce\u9669': ['#dc2626','#fee2e2'],
+  '\u4e2d\u98ce\u9669': ['#d97706','#fef3c7'],
+  '\u4f4e\u98ce\u9669': ['#4a9e6b','#e8f5ee'],
 };
-function tc(type){ return (TYPE_COLOR[type]||TYPE_COLOR['其他'])[0]; }
-function bc(type){ return (TYPE_COLOR[type]||TYPE_COLOR['其他'])[1]; }
-function rtc(risk){ return (RISK_COLOR[risk]||RISK_COLOR['低风险'])[0]; }
-function rbc(risk){ return (RISK_COLOR[risk]||RISK_COLOR['低风险'])[1]; }
+function tc(type){ return (TYPE_COLOR[type]||TYPE_COLOR['\u5176\u4ed6'])[0]; }
+function bc(type){ return (TYPE_COLOR[type]||TYPE_COLOR['\u5176\u4ed6'])[1]; }
+function rtc(risk){ return (RISK_COLOR[risk]||RISK_COLOR['\u4f4e\u98ce\u9669'])[0]; }
+function rbc(risk){ return (RISK_COLOR[risk]||RISK_COLOR['\u4f4e\u98ce\u9669'])[1]; }
 
 const cases0318 = [
-  { seq:'01', name:'张馨文',          no:'沪0101民初8682号',  type:'服务合同（用户）',             risk:'低风险' },
-  { seq:'02', name:'（待补充）',      no:'桂0107民初25627号', type:'其他',                         risk:'低风险' },
-  { seq:'03', name:'李姝彦',          no:'沪0101民初7902号',  type:'其他',                         risk:'低风险' },
-  { seq:'04', name:'（待补充）',      no:'沪0101民初37118号', type:'其他',                         risk:'低风险' },
-  { seq:'05', name:'阴瑛',            no:'沪0101民初31027号', type:'笔记/私信/群聊侵权（人格权）', risk:'中风险' },
-  { seq:'06', name:'韩付博',          no:'沪0101民初8959号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'07', name:'（待补充）',      no:'沪0101民初1814号',  type:'服务合同（用户）',             risk:'低风险', hearing:'4月1日 13:45 开庭' },
-  { seq:'08', name:'兰紫煊',          no:'沪0101民初8960号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'09', name:'郑婷',            no:'沪0101民初9059号',  type:'笔记侵权（知产侵权）',         risk:'低风险' },
-  { seq:'10', name:'苏茈澜',          no:'沪0101民初8707号',  type:'服务合同（用户）',             risk:'低风险' },
-  { seq:'11', name:'南京优格斯曼',    no:'沪73民初286号',     type:'商品侵权（知识产权）',         risk:'中风险' },
-  { seq:'12', name:'胡楚觏',          no:'沪0101民初8736号',  type:'笔记/私信/群聊侵权（人格权）', risk:'中风险' },
-  { seq:'13', name:'GOGO TREATS',     no:'沪0101民初8735号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'14', name:'湖南快乐阳光',    no:'沪0101民初8868号',  type:'不正当竞争',                   risk:'高风险' },
-  { seq:'15', name:'谢嘉欣',          no:'沪0101民初8867号',  type:'笔记侵权（知产侵权）',         risk:'中风险' },
-  { seq:'16', name:'上海捡角餐饮',    no:'沪0101民初8950号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'17', name:'WANG KE',         no:'沪0101民初8831号',  type:'服务合同（用户）',             risk:'中风险' },
-  { seq:'18', name:'汪钊',            no:'沪0101民初8902号',  type:'笔记侵权（知产侵权）',         risk:'低风险' },
-  { seq:'19', name:'张丽',            no:'沪0101民初8733号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'20', name:'姚玉洁',          no:'沪0101民初419号',   type:'服务合同（用户）',             risk:'低风险' },
-  { seq:'21', name:'深圳美佳臣商贸',  no:'沪0101民初8696号',  type:'商品侵权（知识产权）',         risk:'中风险' },
-  { seq:'22', name:'余东',            no:'沪0101民初8695号',  type:'商品侵权（知识产权）',         risk:'中风险' },
-  { seq:'23', name:'钟洢柠',          no:'沪0101民初8817号',  type:'服务合同（用户）',             risk:'中风险' },
-  { seq:'24', name:'上海捡角餐饮②',  no:'沪0101民初8949号',  type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
+  { seq:'01', name:'\u5f20\u99a8\u6587',          no:'\u6caa0101\u6c11\u521d8682\u53f7',  type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09',             risk:'\u4f4e\u98ce\u9669' },
+  { seq:'02', name:'\uff08\u5f85\u8865\u5145\uff09',      no:'\u68420107\u6c11\u521d25627\u53f7', type:'\u5176\u4ed6',                         risk:'\u4f4e\u98ce\u9669' },
+  { seq:'03', name:'\u674e\u59dd\u5f66',          no:'\u6caa0101\u6c11\u521d7902\u53f7',  type:'\u5176\u4ed6',                         risk:'\u4f4e\u98ce\u9669' },
+  { seq:'04', name:'\uff08\u5f85\u8865\u5145\uff09',      no:'\u6caa0101\u6c11\u521d37118\u53f7', type:'\u5176\u4ed6',                         risk:'\u4f4e\u98ce\u9669' },
+  { seq:'05', name:'\u9634\u745b',            no:'\u6caa0101\u6c11\u521d31027\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4e2d\u98ce\u9669' },
+  { seq:'06', name:'\u97e9\u4ed8\u535a',          no:'\u6caa0101\u6c11\u521d8959\u53f7',  type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'07', name:'\uff08\u5f85\u8865\u5145\uff09',      no:'\u6caa0101\u6c11\u521d1814\u53f7',  type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09',             risk:'\u4f4e\u98ce\u9669', hearing:'2026\u5e7404\u670801\u65e5 13:45' },
+  { seq:'08', name:'\u5170\u7d2b\u714a',          no:'\u6caa0101\u6c11\u521d8960\u53f7',  type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'09', name:'\u90d1\u5a77',            no:'\u6caa0101\u6c11\u521d9059\u53f7',  type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09',         risk:'\u4f4e\u98ce\u9669' },
+  { seq:'10', name:'\u82cf\u8308\u6f9c',          no:'\u6caa0101\u6c11\u521d8707\u53f7',  type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09',             risk:'\u4f4e\u98ce\u9669' },
+  { seq:'11', name:'\u5357\u4eac\u4f18\u683c\u65af\u66fc',    no:'\u6caa73\u6c11\u521d286\u53f7',     type:'\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09',         risk:'\u4e2d\u98ce\u9669' },
+  { seq:'12', name:'\u80e1\u695a\u89cf',          no:'\u6caa0101\u6c11\u521d8736\u53f7',  type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4e2d\u98ce\u9669' },
+  { seq:'13', name:'GOGO TREATS',     no:'\u6caa0101\u6c11\u521d8735\u53f7',  type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'14', name:'\u6e56\u5357\u5feb\u4e50\u9633\u5149',    no:'\u6caa0101\u6c11\u521d8868\u53f7',  type:'\u4e0d\u6b63\u5f53\u7ade\u4e89',                   risk:'\u9ad8\u98ce\u9669' },
+  { seq:'15', name:'\u8c22\u5609\u6b23',          no:'\u6caa0101\u6c11\u521d8867\u53f7',  type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09',         risk:'\u4e2d\u98ce\u9669' },
+  { seq:'16', name:'\u4e0a\u6d77\u6361\u89d2\u9910\u996e',    no:'\u6caa0101\u6c11\u521d8950\u53f7',  type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'17', name:'WANG KE',         no:'\u6caa0101\u6c11\u521d8831\u53f7',  type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09',             risk:'\u4e2d\u98ce\u9669' },
+  { seq:'18', name:'\u6c6a\u948a',            no:'\u6caa0101\u6c11\u521d8902\u53f7',  type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09',         risk:'\u4f4e\u98ce\u9669' },
+  { seq:'19', name:'\u5f20\u4e3d',            no:'\u6caa0101\u6c11\u521d8733\u53f7',  type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'20', name:'\u59da\u7389\u6d01',          no:'\u6caa0101\u6c11\u521d419\u53f7',   type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09',             risk:'\u4f4e\u98ce\u9669' },
+  { seq:'21', name:'\u6df1\u5733\u7f8e\u4f73\u81e3\u5546\u8d38',  no:'\u6caa0101\u6c11\u521d8696\u53f7',  type:'\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09',         risk:'\u4e2d\u98ce\u9669' },
+  { seq:'22', name:'\u4f59\u4e1c',            no:'\u6caa0101\u6c11\u521d8695\u53f7',  type:'\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09',         risk:'\u4e2d\u98ce\u9669' },
+  { seq:'23', name:'\u949f\u6d22\u67e0',          no:'\u6caa0101\u6c11\u521d8817\u53f7',  type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09',             risk:'\u4e2d\u98ce\u9669' },
+  { seq:'24', name:'\u4e0a\u6d77\u6361\u89d2\u9910\u996e②',  no:'\u6caa0101\u6c11\u521d8949\u53f7',  type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
 ];
 
 // ══ Donut SVG ══
@@ -658,18 +838,18 @@ const cases0318 = [
     offset += pct * 2 * Math.PI;
   });
 
-  // 中心文字
+  // \u4e2d\u5fc3\u6587\u5b57
   const t1 = document.createElementNS('http://www.w3.org/2000/svg','text');
   t1.setAttribute('x','60'); t1.setAttribute('y','56');
   t1.setAttribute('text-anchor','middle'); t1.setAttribute('fill','#1a1a1a');
   t1.setAttribute('font-size','18'); t1.setAttribute('font-weight','800');
-  t1.textContent = '70';
+  t1.textContent = '101';
   svg.appendChild(t1);
   const t2 = document.createElementNS('http://www.w3.org/2000/svg','text');
   t2.setAttribute('x','60'); t2.setAttribute('y','70');
   t2.setAttribute('text-anchor','middle'); t2.setAttribute('fill','#9ca3af');
   t2.setAttribute('font-size','9');
-  t2.textContent = '总案件';
+  t2.textContent = '\u603b\u6848\u4ef6';
   svg.appendChild(t2);
 
   // Legend
@@ -694,7 +874,7 @@ const cases0318 = [
     const pct = Math.round(d.val/d.max*100);
     el.innerHTML += `
       <div class="hbar-item">
-        <div class="hbar-label">${d.label}<span>${d.val} 件</span></div>
+        <div class="hbar-label">${d.label}<span>${d.val} \u4ef6</span></div>
         <div class="hbar-track">
           <div class="hbar-fill" style="width:${pct}%;background:${colors[i]}"></div>
         </div>
@@ -706,8 +886,17 @@ const cases0318 = [
 (function(){
   const el = document.getElementById('stackedBars');
   const batches = [
-    { label:'0317 批次', complete:32, missing:14, nopdf:0,  total:46 },
-    { label:'0318 批次', complete:22, missing:2,  nopdf:0,  total:24 },
+    { label:'0317 \u6279\u6b21', complete:32, missing:14, nopdf:0,  total:46 },
+    { label:'0318 \u6279\u6b21', complete:22, missing:2,  nopdf:0,  total:24 },
+    { label:'0330 \u6279\u6b21', complete:24, missing:7,  nopdf:0,  total:31 },
+    { label:'0401 \u6279\u6b21', complete:40, missing:4,  nopdf:0,  total:44 },
+    { label:'0414 \u6279\u6b21', complete:14, missing:0,  nopdf:0,  total:14 },
+    { label:'0415 \u6279\u6b21', complete:31, missing:0,  nopdf:0,  total:31 },
+    { label:'0416 \u6279\u6b21', complete:38, missing:0,  nopdf:0,  total:38 },
+    { label:'0417 \u6279\u6b21', complete:37, missing:0,  nopdf:0,  total:37 },,
+    { label:'0420 \u6279\u6b21', complete:33, missing:8, nopdf:5,  total:46 },
+    { label:'0421 \u6279\u6b21', complete:14, missing:12, nopdf:5,  total:31 },
+    { label:'0408new \u6279\u6b21', complete:20, missing:9, nopdf:4,  total:33 }
   ];
   batches.forEach(b => {
     const w1 = (b.complete/b.total*100).toFixed(0);
@@ -715,16 +904,16 @@ const cases0318 = [
     const w3 = (b.nopdf/b.total*100).toFixed(0);
     el.innerHTML += `
       <div class="stacked-item">
-        <div class="stacked-label">${b.label}（${b.total}件）</div>
+        <div class="stacked-label">${b.label}\uff08${b.total}\u4ef6\uff09</div>
         <div class="stacked-bar">
           <div class="stacked-seg" style="flex:${b.complete};background:#4a9e6b">${b.complete}</div>
           ${b.missing?`<div class="stacked-seg" style="flex:${b.missing};background:#d97706">${b.missing}</div>`:''}
           ${b.nopdf?`<div class="stacked-seg" style="flex:${b.nopdf};background:#dc2626">${b.nopdf}</div>`:''}
         </div>
         <div style="display:flex;gap:10px;margin-top:4px;font-size:10px;color:var(--text2)">
-          <span style="color:var(--accent-mid)">■ 完整 ${b.complete}</span>
-          <span style="color:var(--yellow)">■ 缺原告 ${b.missing}</span>
-          ${b.nopdf?`<span style="color:#dc2626">■ 无PDF ${b.nopdf}</span>`:''}
+          <span style="color:var(--accent-mid)">■ \u5b8c\u6574 ${b.complete}</span>
+          <span style="color:var(--yellow)">■ \u7f3a\u539f\u544a ${b.missing}</span>
+          ${b.nopdf?`<span style="color:#dc2626">■ \u65e0PDF ${b.nopdf}</span>`:''}
         </div>
       </div>`;
   });
@@ -739,17 +928,17 @@ const cases0318 = [
     const hearingBadge = c.hearing
       ? `<span class="tag" style="color:#ff5c6c;border-color:#ff5c6c44;background:#ff5c6c22;margin-left:4px">⏰ ${c.hearing}</span>`
       : '';
-    // 长类型名简化显示
+    // \u957f\u7c7b\u578b\u540d\u7b80\u5316\u663e\u793a
     const shortType = c.type
-      .replace('笔记/私信/群聊侵权（人格权）','人格权侵权')
-      .replace('笔记侵权（知产侵权）','知产侵权')
-      .replace('商品侵权（知识产权）','商品知产')
-      .replace('服务合同（用户）','服务合同');
+      .replace('\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09','\u4eba\u683c\u6743\u4fb5\u6743')
+      .replace('\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09','\u77e5\u4ea7\u4fb5\u6743')
+      .replace('\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09','\u5546\u54c1\u77e5\u4ea7')
+      .replace('\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09','\u670d\u52a1\u5408\u540c');
     div.innerHTML = `
       <div class="case-seq">${c.seq}</div>
       <div class="case-main">
         <div class="case-name">${c.name}</div>
-        <div class="case-no">（2026）${c.no}</div>
+        <div class="case-no">\uff082026\uff09${c.no}</div>
       </div>
       <span class="tag" style="color:${tc(c.type)};border-color:${bc(c.type)};background:${bc(c.type)}">${shortType}</span>
       <span class="tag" style="color:${rtc(c.risk)};border-color:${rbc(c.risk)};background:${rbc(c.risk)};margin-left:4px">${c.risk}</span>
@@ -758,100 +947,360 @@ const cases0318 = [
   });
 })();
 
-// ══ 0317 批次数据 ══
+// ══ 0317 \u6279\u6b21\u6570\u636e ══
 const cases0317 = [
-  { seq:'01', name:'陈泽豪', no:'云2801民初647号', type:'服务合同（用户）', risk:'低风险' },
-  { seq:'02', name:'广州尤康网络科技有限公司', no:'沪0101民初2395号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'03', name:'张明', no:'沪0101民初3456号', type:'其他', risk:'低风险' },
-  { seq:'04', name:'李华', no:'沪0101民初3457号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'05', name:'王静', no:'沪0101民初3458号', type:'其他', risk:'低风险' },
-  { seq:'06', name:'刘洋', no:'沪0101民初3459号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'07', name:'陈伟', no:'沪0101民初3460号', type:'其他', risk:'低风险' },
-  { seq:'08', name:'杨帆', no:'沪0101民初3461号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'09', name:'赵磊', no:'沪0101民初3462号', type:'服务合同（用户）', risk:'低风险' },
-  { seq:'10', name:'孙丽', no:'沪0101民初3463号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'11', name:'周明', no:'沪0101民初3464号', type:'其他', risk:'低风险' },
-  { seq:'12', name:'吴芳', no:'沪0101民初3465号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'13', name:'郑刚', no:'沪0101民初3466号', type:'其他', risk:'低风险' },
-  { seq:'14', name:'王敏', no:'沪0101民初3467号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'15', name:'冯娟', no:'沪0101民初3468号', type:'其他', risk:'低风险' },
-  { seq:'16', name:'张强', no:'沪0101民初3469号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'17', name:'李明', no:'沪0101民初3470号', type:'其他', risk:'低风险' },
-  { seq:'18', name:'王红', no:'沪0101民初3471号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'19', name:'刘丽', no:'沪0101民初3472号', type:'其他', risk:'低风险' },
-  { seq:'20', name:'张军', no:'沪0101民初3473号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'21', name:'李芳', no:'沪0101民初3474号', type:'其他', risk:'低风险' },
-  { seq:'22', name:'王涛', no:'沪0101民初3475号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'23', name:'陈静', no:'沪0101民初3476号', type:'其他', risk:'低风险' },
-  { seq:'24', name:'刘强', no:'沪0101民初3477号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'25', name:'张丽', no:'沪0101民初3478号', type:'其他', risk:'低风险' },
-  { seq:'26', name:'李刚', no:'沪0101民初3479号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'27', name:'王平', no:'沪0101民初3480号', type:'其他', risk:'低风险' },
-  { seq:'28', name:'陈磊', no:'沪0101民初3481号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'29', name:'刘波', no:'沪0101民初3482号', type:'其他', risk:'低风险' },
-  { seq:'30', name:'张峰', no:'沪0101民初3483号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'31', name:'李娟', no:'沪0101民初3484号', type:'其他', risk:'低风险' },
-  { seq:'32', name:'王超', no:'沪0101民初3485号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'33', name:'陈洁', no:'沪0101民初3486号', type:'其他', risk:'低风险' },
-  { seq:'34', name:'刘鹏', no:'沪0101民初3487号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'35', name:'张慧', no:'沪0101民初3488号', type:'其他', risk:'低风险' },
-  { seq:'36', name:'李志', no:'沪0101民初3489号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'37', name:'王秀英', no:'沪0101民初3490号', type:'其他', risk:'低风险' },
-  { seq:'38', name:'陈伟', no:'沪0101民初3491号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'39', name:'刘敏', no:'沪0101民初3492号', type:'其他', risk:'低风险' },
-  { seq:'40', name:'张玲', no:'沪0101民初3493号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'41', name:'李健', no:'沪0101民初3494号', type:'其他', risk:'低风险' },
-  { seq:'42', name:'王明', no:'沪0101民初3495号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'43', name:'陈华', no:'沪0101民初3496号', type:'其他', risk:'低风险' },
-  { seq:'44', name:'刘燕', no:'沪0101民初3497号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'45', name:'张勇', no:'沪0101民初3498号', type:'其他', risk:'低风险' },
-  { seq:'46', name:'李梅', no:'沪0101民初3499号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'01', name:'\u9648\u6cfd\u8c6a', no:'\u4e912801\u6c11\u521d647\u53f7', type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'02', name:'\u5e7f\u5dde\u5c24\u5eb7\u7f51\u7edc\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d2395\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'03', name:'\u5f20\u660e', no:'\u6caa0101\u6c11\u521d3456\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'04', name:'\u674e\u534e', no:'\u6caa0101\u6c11\u521d3457\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'05', name:'\u738b\u9759', no:'\u6caa0101\u6c11\u521d3458\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'06', name:'\u5218\u6d0b', no:'\u6caa0101\u6c11\u521d3459\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'07', name:'\u9648\u4f1f', no:'\u6caa0101\u6c11\u521d3460\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'08', name:'\u6768\u5e06', no:'\u6caa0101\u6c11\u521d3461\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'09', name:'\u8d75\u78ca', no:'\u6caa0101\u6c11\u521d3462\u53f7', type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'10', name:'\u5b59\u4e3d', no:'\u6caa0101\u6c11\u521d3463\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'11', name:'\u5468\u660e', no:'\u6caa0101\u6c11\u521d3464\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'12', name:'\u5434\u82b3', no:'\u6caa0101\u6c11\u521d3465\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'13', name:'\u90d1\u521a', no:'\u6caa0101\u6c11\u521d3466\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'14', name:'\u738b\u654f', no:'\u6caa0101\u6c11\u521d3467\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'15', name:'\u51af\u5a1f', no:'\u6caa0101\u6c11\u521d3468\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'16', name:'\u5f20\u5f3a', no:'\u6caa0101\u6c11\u521d3469\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'17', name:'\u674e\u660e', no:'\u6caa0101\u6c11\u521d3470\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'18', name:'\u738b\u7ea2', no:'\u6caa0101\u6c11\u521d3471\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'19', name:'\u5218\u4e3d', no:'\u6caa0101\u6c11\u521d3472\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'20', name:'\u5f20\u519b', no:'\u6caa0101\u6c11\u521d3473\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'21', name:'\u674e\u82b3', no:'\u6caa0101\u6c11\u521d3474\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'22', name:'\u738b\u6d9b', no:'\u6caa0101\u6c11\u521d3475\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'23', name:'\u9648\u9759', no:'\u6caa0101\u6c11\u521d3476\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'24', name:'\u5218\u5f3a', no:'\u6caa0101\u6c11\u521d3477\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'25', name:'\u5f20\u4e3d', no:'\u6caa0101\u6c11\u521d3478\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'26', name:'\u674e\u521a', no:'\u6caa0101\u6c11\u521d3479\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'27', name:'\u738b\u5e73', no:'\u6caa0101\u6c11\u521d3480\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'28', name:'\u9648\u78ca', no:'\u6caa0101\u6c11\u521d3481\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'29', name:'\u5218\u6ce2', no:'\u6caa0101\u6c11\u521d3482\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'30', name:'\u5f20\u5cf0', no:'\u6caa0101\u6c11\u521d3483\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'31', name:'\u674e\u5a1f', no:'\u6caa0101\u6c11\u521d3484\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'32', name:'\u738b\u8d85', no:'\u6caa0101\u6c11\u521d3485\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'33', name:'\u9648\u6d01', no:'\u6caa0101\u6c11\u521d3486\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'34', name:'\u5218\u9e4f', no:'\u6caa0101\u6c11\u521d3487\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'35', name:'\u5f20\u6167', no:'\u6caa0101\u6c11\u521d3488\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'36', name:'\u674e\u5fd7', no:'\u6caa0101\u6c11\u521d3489\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'37', name:'\u738b\u79c0\u82f1', no:'\u6caa0101\u6c11\u521d3490\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'38', name:'\u9648\u4f1f', no:'\u6caa0101\u6c11\u521d3491\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'39', name:'\u5218\u654f', no:'\u6caa0101\u6c11\u521d3492\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'40', name:'\u5f20\u73b2', no:'\u6caa0101\u6c11\u521d3493\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'41', name:'\u674e\u5065', no:'\u6caa0101\u6c11\u521d3494\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'42', name:'\u738b\u660e', no:'\u6caa0101\u6c11\u521d3495\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'43', name:'\u9648\u534e', no:'\u6caa0101\u6c11\u521d3496\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'44', name:'\u5218\u71d5', no:'\u6caa0101\u6c11\u521d3497\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'45', name:'\u5f20\u52c7', no:'\u6caa0101\u6c11\u521d3498\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'46', name:'\u674e\u6885', no:'\u6caa0101\u6c11\u521d3499\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
 ];
 
-// ══ 0330 批次数据 ══
+// ══ 0330 \u6279\u6b21\u6570\u636e ══
 const cases0330 = [
-  { seq:'01', name:'张怡婷', no:'沪0101民初7182号', type:'其他', risk:'低风险' },
-  { seq:'02', name:'郜文佳', no:'沪0101民初9590号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'03', name:'邹海燕', no:'沪0101民初7964号', type:'其他', risk:'低风险' },
-  { seq:'04', name:'（待补充）', no:'黑0109民初3526号', type:'其他', risk:'低风险' },
-  { seq:'05', name:'（待补充）', no:'沪0101民初5475号', type:'其他', risk:'低风险' },
-  { seq:'06', name:'北京爱奇艺科技有限公司', no:'苏0115民初2330号', type:'笔记侵权（知产侵权）', risk:'高风险' },
-  { seq:'07', name:'隆莉', no:'沪0101民初9591号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'08', name:'（待补充）', no:'粤1302民初37448号', type:'其他', risk:'低风险' },
-  { seq:'09', name:'李岚', no:'沪0101民初9596号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'10', name:'石子涵', no:'沪0101民初9597号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'11', name:'北京爱奇艺科技有限公司', no:'苏0115民初2335号', type:'笔记侵权（知产侵权）', risk:'高风险' },
-  { seq:'12', name:'北京爱奇艺科技有限公司', no:'苏0115民初2334号', type:'笔记侵权（知产侵权）', risk:'高风险' },
-  { seq:'13', name:'北京爱奇艺科技有限公司', no:'苏0115民初2336号', type:'笔记侵权（知产侵权）', risk:'高风险' },
-  { seq:'14', name:'北京爱奇艺科技有限公司', no:'苏0115民初2338号', type:'笔记侵权（知产侵权）', risk:'高风险' },
-  { seq:'15', name:'苏州马来熊电子商务', no:'沪0101民初9598号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'16', name:'（待补充）', no:'沪0101民初5380号', type:'其他', risk:'低风险' },
-  { seq:'17', name:'（待补充）', no:'沪0101民初5381号', type:'其他', risk:'低风险' },
-  { seq:'18', name:'杨亚运', no:'辽0211民初494号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'19', name:'武汉范琦珠宝饰品', no:'沪0101民初5473号', type:'商品侵权（知识产权）', risk:'低风险' },
-  { seq:'20', name:'深圳减字科技有限公司', no:'沪0101民初7730号', type:'其他', risk:'低风险' },
-  { seq:'21', name:'深圳减字科技有限公司', no:'沪0101民初7731号', type:'其他', risk:'低风险' },
-  { seq:'22', name:'深圳减字科技有限公司', no:'沪0101民初7732号', type:'其他', risk:'低风险' },
-  { seq:'23', name:'深圳减字科技有限公司', no:'沪0101民初7734号', type:'其他', risk:'低风险' },
-  { seq:'24', name:'深圳减字科技有限公司', no:'沪0101民初7733号', type:'其他', risk:'低风险' },
-  { seq:'25', name:'南京轩玺商贸有限公司', no:'沪0101民初7760号', type:'商品侵权（知识产权）', risk:'低风险' },
-  { seq:'26', name:'李伟嘉', no:'沪0101民初8278号', type:'服务合同（用户）', risk:'低风险' },
-  { seq:'27', name:'邓浩晨', no:'渝0111民初355号', type:'其他', risk:'低风险' },
-  { seq:'28', name:'（待补充）', no:'浙0105民初1680号', type:'其他', risk:'低风险' },
-  { seq:'29', name:'（待补充）', no:'沪0101民初8893号', type:'不正当竞争', risk:'低风险', hearing:'2026年05月13日 14:00' },
-  { seq:'30', name:'四川蜀信致远企业管理', no:'沪0101民初8296号', type:'笔记侵权（其他权益）', risk:'低风险' },
-  { seq:'31', name:'天津磨铁图书有限公司', no:'沪0101民初4021号', type:'笔记侵权（知产侵权）', risk:'低风险' },
+  { seq:'01', name:'\u5f20\u6021\u5a77', no:'\u6caa0101\u6c11\u521d7182\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'02', name:'\u90dc\u6587\u4f73', no:'\u6caa0101\u6c11\u521d9590\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'03', name:'\u90b9\u6d77\u71d5', no:'\u6caa0101\u6c11\u521d7964\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'04', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u9ed10109\u6c11\u521d3526\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'05', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d5475\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'06', name:'\u5317\u4eac\u7231\u5947\u827a\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u82cf0115\u6c11\u521d2330\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u9ad8\u98ce\u9669' },
+  { seq:'07', name:'\u9686\u8389', no:'\u6caa0101\u6c11\u521d9591\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'08', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca41302\u6c11\u521d37448\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'09', name:'\u674e\u5c9a', no:'\u6caa0101\u6c11\u521d9596\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'10', name:'\u77f3\u5b50\u6db5', no:'\u6caa0101\u6c11\u521d9597\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'11', name:'\u5317\u4eac\u7231\u5947\u827a\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u82cf0115\u6c11\u521d2335\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u9ad8\u98ce\u9669' },
+  { seq:'12', name:'\u5317\u4eac\u7231\u5947\u827a\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u82cf0115\u6c11\u521d2334\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u9ad8\u98ce\u9669' },
+  { seq:'13', name:'\u5317\u4eac\u7231\u5947\u827a\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u82cf0115\u6c11\u521d2336\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u9ad8\u98ce\u9669' },
+  { seq:'14', name:'\u5317\u4eac\u7231\u5947\u827a\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u82cf0115\u6c11\u521d2338\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u9ad8\u98ce\u9669' },
+  { seq:'15', name:'\u82cf\u5dde\u9a6c\u6765\u718a\u7535\u5b50\u5546\u52a1', no:'\u6caa0101\u6c11\u521d9598\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'16', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d5380\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'17', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d5381\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'18', name:'\u6768\u4e9a\u8fd0', no:'\u8fbd0211\u6c11\u521d494\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'19', name:'\u6b66\u6c49\u8303\u7426\u73e0\u5b9d\u9970\u54c1', no:'\u6caa0101\u6c11\u521d5473\u53f7', type:'\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'20', name:'\u6df1\u5733\u51cf\u5b57\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d7730\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'21', name:'\u6df1\u5733\u51cf\u5b57\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d7731\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'22', name:'\u6df1\u5733\u51cf\u5b57\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d7732\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'23', name:'\u6df1\u5733\u51cf\u5b57\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d7734\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'24', name:'\u6df1\u5733\u51cf\u5b57\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d7733\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'25', name:'\u5357\u4eac\u8f69\u73ba\u5546\u8d38\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d7760\u53f7', type:'\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'26', name:'\u674e\u4f1f\u5609', no:'\u6caa0101\u6c11\u521d8278\u53f7', type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'27', name:'\u9093\u6d69\u6668', no:'\u6e1d0111\u6c11\u521d355\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'28', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6d590105\u6c11\u521d1680\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'29', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d8893\u53f7', type:'\u4e0d\u6b63\u5f53\u7ade\u4e89', risk:'\u4f4e\u98ce\u9669', hearing:'2026\u5e7405\u670813\u65e5 14:00' },
+  { seq:'30', name:'\u56db\u5ddd\u8700\u4fe1\u81f4\u8fdc\u4f01\u4e1a\u7ba1\u7406', no:'\u6caa0101\u6c11\u521d8296\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u5176\u4ed6\u6743\u76ca\uff09', risk:'\u4f4e\u98ce\u9669' },
+  { seq:'31', name:'\u5929\u6d25\u78e8\u94c1\u56fe\u4e66\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d4021\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669' },
 ];
 
-// ══ 全量数据（带 batch 字段）══
+// ══ \u5168\u91cf\u6570\u636e\uff08\u5e26 batch \u5b57\u6bb5\uff09══
+// AЕ\u6279\u6b21\u6570\u636e
+const cases0415 = [
+  { seq:'01', name:'\u676d\u5dde\u79be\u8f85\u8d38\u6613\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11649', type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'02', name:'\u5357\u6fb3\u53bf\u4e91\u6fb3\u9547\u6b27\u98ce\u7f51\u7edc', no:'\u6caa0101\u6c11\u521d3103', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'03', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u5ddd71\u6c11\u7ec8246', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'04', name:'\u80e1\u695a\u9753', no:'\u6caa0101\u6c11\u521d8737', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'05', name:'\u6c88\u9633\u5fc3\u52a8\u4f20\u5a92\u79d1\u6280\u6709\u9650', no:'\u6caa0101\u6c11\u521d9202', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'06', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d10927', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'07', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d24552', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'08', name:'\u5b59\u5bb6\u60df', no:'\u6caa0101\u6c11\u521d11048', type:'\u7f51\u8d2d\u5408\u540c\u7ea0\u7eb7', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'09', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11606', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'10', name:'\u53f6\u94a2', no:'\u6caa0101\u6c11\u521d10723', type:'\u670d\u52a1\u5408\u540c\uff08\u5546\u5bb6\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'11', name:'\u5415\u5586', no:'\u6caa0101\u6c11\u521d11098', type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'12', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d9991', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'13', name:'\u5f6d\u667a\u6021', no:'\u6caa0101\u6c11\u521d11350', type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'14', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0106\u6c11\u521d10453', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'15', name:'\u4e00\u822c\u793e\u56e2\u6cd5\u4eba\u5fd7\u9e3f\u4f1a\uff08', no:'\u6caa0101\u6c11\u521d11791', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'16', name:'\u4e00\u822c\u793e\u56e2\u6cd5\u4eba\u5fd7\u9e3f\u4f1a\uff08', no:'\u6caa0101\u6c11\u521d11786', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'17', name:'\u4e00\u822c\u793e\u56e2\u6cd5\u4eba\u5fd7\u9e3f\u4f1a\uff08', no:'\u6caa0101\u6c11\u521d11782', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'18', name:'\u6e56\u5357\u745e\u6cf0\u79d1\u5c14\u96c5\u53e3\u8154\u533b', no:'\u6caa0101\u6c11\u521d11779', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'19', name:'\u738b\u6e90', no:'\u6caa0101\u6c11\u521d11778', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'20', name:'\u738b\u5fd7\u65fb', no:'\u6caa0101\u6c11\u521d11777', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'21', name:'\u5f90\u5bd2\u96ea', no:'\u6caa0101\u6c11\u521d11768', type:'\u7f51\u8d2d\u5408\u540c\u7ea0\u7eb7', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'22', name:'\u8d75\u7fcc', no:'\u6caa0101\u6c11\u521d11702', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'23', name:'\u738b\u82e5\u6684', no:'\u6caa0101\u6c11\u521d11701', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'24', name:'\u9648\u5180\u7ea2', no:'\u6caa0101\u6c11\u521d7951', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'25', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d6951', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'26', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d8967', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'27', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u68420204\u6c11\u521d470', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'28', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u8c037477', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'29', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d25014', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'30', name:'\u9ec4\u4f73\u8d5b', no:'\u6caa0101\u6c11\u521d33491', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'31', name:'\u8386\u7530\u5e02\u8354\u57ce\u533a\u96c5\u8c6a\u8fb0\u6b63', no:'\u6caa0101\u6c11\u521d10677', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+];
+
+const cases0414 = [
+  { seq:'01', name:'\u5f20\u4e3d', no:'\u6caa0101\u6c11\u521d8731\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'02', name:'\u674e\u5929\u5b87', no:'\u76960102\u6c11\u521d816\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'03', name:'\u4f55\u6625\u51e4', no:'\u6caa0101\u6c11\u521d7953\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'04', name:'\u6e29\u5dde\u5e02\u9e7f\u57ce\u533a\u5dfe\u4f3d\u5065\u5eb7\u7ba1\u7406\u5de5\u4f5c\u5ba4', no:'\u6d590324\u6c11\u521d2703\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'05', name:'\u5218\u6d41', no:'\u6d590212\u6c11\u521d3669\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'06', name:'\u629a\u5dde\u5e02\u4e1c\u4e61\u533a\u5168\u798f\u73e0\u5b9d\u9ec4\u91d1\u5e97', no:'\u6caa0101\u6c11\u521d10125\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'07', name:'\u6b66\u6c49\u8303\u7426\u73e0\u5b9d\u9970\u54c1\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11034\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'08', name:'\u5e7f\u5dde\u5357\u6c99\u533a\u7f8e\u4e0e\u5065\u5eb7\u54a8\u8be2\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11704\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'09', name:'\u97e9\u78ca', no:'\u6caa0101\u6c11\u521d11671\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'10', name:'\u738b\u6662', no:'\u6caa0101\u6c11\u521d11703\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'11', name:'\u674e\u4f1f\u5609', no:'\u6caa0101\u6c11\u521d8278\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'12', name:'\u82ad\u8d1d\u62c9\u5316\u5986\u54c1\uff08\u6d59\u6c5f\uff09\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11036\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'13', name:'\u5317\u4eac\u68a6\u4e4b\u57ce\u6587\u5316\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11043\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'14', name:'\u5929\u6d25\u66f3\u5ddd\u6587\u5316\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6d250111\u6c11\u521d4665\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4e2d\u98ce\u9669', year:'2026' }
+];
+
+const cases0416 = [
+  { seq:'01', name:'\u5f20\u8273\u654f', no:'\u6caa0101\u6c11\u521d11863\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'02', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa73\u6c11\u521d98\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'03', name:'\u5317\u4eac\u78e8\u94c1\u6587\u5316\u96c6\u56e2\u80a1\u4efd\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d7756\u53f7', type:'\u5546\u54c1\u77e5\u4ea7', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'04', name:'\u84dd\u6708\u4eae\uff08\u4e2d\u56fd\uff09\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11046\u53f7', type:'\u5546\u54c1\u77e5\u4ea7', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'05', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa73\u6c11\u521d99\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'06', name:'\u5e7f\u5dde\u5478\u55bd\u5478\u55bd\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11040\u53f7', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'07', name:'\u676d\u5dde\u6d6e\u5c9b\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d8692\u53f7', type:'\u5176\u4ed6\u6743\u76ca', risk:'\u9ad8\u98ce\u9669', year:'2026', hearing:'2026\u5e7404\u670823\u65e5 09:00' },
+  { seq:'08', name:'\u738b\u5a1c\u5a1c', no:'\u6caa0101\u6c11\u521d4036\u53f7', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'09', name:'\u536b\u9896\u535a', no:'\u6caa0101\u6c11\u521d30064\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'10', name:'\u5353\u715c\u665f', no:'\u6caa0101\u6c11\u521d11255\u53f7', type:'\u5176\u4ed6\u6743\u76ca', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'11', name:'\u9648\u745c 2006\u5e74 2 \u6708 25\u65e5', no:'\u6caa0101\u6c11\u521d11351\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'12', name:'\u55bb\u6d77\u660e', no:'\u6caa0101\u6c11\u521d11418\u53f7', type:'\u670d\u52a1\u5408\u540c', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'13', name:'\u5218\u82b8\u83b9', no:'\u6caa0101\u6c11\u521d11049\u53f7', type:'\u5176\u4ed6\u6743\u76ca', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'14', name:'\u53f6\u5929\u5b9d', no:'\u6caa0101\u6c11\u521d11742\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'15', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11743\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'16', name:'\u6e56\u5357\u73af\u6e38\u591a\u8da3\u56fd\u9645\u65c5\u884c\u793e\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11676\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'17', name:'\u738b\u5f66', no:'\u6caa0101\u6c11\u521d11726\u53f7', type:'\u7f51\u8d2d\u5408\u540c', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'18', name:'\u97e9\u5b87\u840c', no:'\u6caa0101\u6c11\u521d11721\u53f7', type:'\u5176\u4ed6\u6743\u76ca', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'19', name:'\u5f20\u8212\u6021', no:'\u6caa0101\u6c11\u521d11819\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'20', name:'\u9648\u660e', no:'\u6caa0101\u6c11\u521d11730\u53f7', type:'\u670d\u52a1\u5408\u540c', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'21', name:'\u738b\u6c38\u5409', no:'\u6caa0101\u6c11\u521d11840\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'22', name:'\u738b\u6c38\u5409', no:'\u6caa0101\u6c11\u521d11839\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'23', name:'\u67f3\u6842\u6797', no:'\u6caa0101\u6c11\u521d11724\u53f7', type:'\u670d\u52a1\u5408\u540c', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7405\u670809\u65e5 10:15' },
+  { seq:'24', name:'\u738b\u6c38\u5409', no:'\u6caa0101\u6c11\u521d11837\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'25', name:'\u6c6a\u6d0b', no:'\u6caa0101\u6c11\u521d11827\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'26', name:'\u4e8e\u5bd2\u9732', no:'\u6caa0101\u6c11\u521d11825\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'27', name:'\u5434 \u4e3d\u4eea', no:'\u6caa0101\u6c11\u521d11824\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'28', name:'\u9648\u79cb\u5e8f', no:'\u6caa0101\u6c11\u521d11822\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'29', name:'\u5434\u6c5f\u533a\u540c\u91cc\u9547\u5c0f\u4e3d\u5de5\u827a\u54c1\u5e97', no:'\u6caa0101\u6c11\u521d9028\u53f7', type:'\u670d\u52a1\u5408\u540c', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'30', name:'\u7ff1\u666f\uff08\u4e0a\u6d77\uff09\u5546\u8d38\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11821\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'31', name:'\u5218 \u5b50\u7426', no:'\u6caa0101\u6c11\u521d11728\u53f7', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'32', name:'\u5b63\u6b23\u6021', no:'\u6caa0101\u6c11\u521d11820\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'33', name:'\u626c\u5dde\u7ecf\u6d4e\u6280\u672f\u5f00\u53d1\u533a\u672a\u6765\u7cbe\u82f1\u4e66\u5e97', no:'\u6caa0101\u6c11\u521d8893\u53f7', type:'\u4e0d\u6b63\u7ade\u4e89', risk:'\u9ad8\u98ce\u9669', year:'2026' },
+  { seq:'34', name:'\u9648\u79cb\u5e8f', no:'\u6caa0101\u6c11\u521d11940\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'35', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11740\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'36', name:'\u5f20\u9a70', no:'\u6caa0101\u6c11\u521d10755\u53f7', type:'\u5176\u4ed6\u6743\u76ca', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'37', name:'\u5357\u4eac\u4e91\u7840\u7f51\u7edc\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u82cf0192\u6c11\u521d15225\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'38', name:'\u5e72\u662d\u6a66\uff08\u7cfb\u672a\u6210\u5e74\u4eba\uff09', no:'\u6caa0101\u6c11\u521d10760\u53f7', type:'\u5176\u4ed6', risk:'\u4e2d\u98ce\u9669', year:'2026' }
+];
+
+const cases0417 = [
+  { seq:'01', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d8867\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'02', name:'\u90b5\u9b41\u537f', no:'\u6caa0101\u6c11\u521d11874\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'03', name:'\u6f58\u5609\u8c6a', no:'\u6caa0101\u6c11\u521d10648\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'04', name:'\u5357\u4eac\u4e91\u7840', no:'\u82cf0192\u6c11\u521d15225\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'05', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d5316\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'06', name:'\u91ce\u7684\u670d\u9970', no:'\u6caa0101\u6c11\u521d11715\u53f7', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'07', name:'\u5e7f\u5dde\u7231\u5de2', no:'\u6caa0101\u6c11\u521d11717\u53f7', type:'\u7f51\u8d2d\u5408\u540c', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'08', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d1562\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'09', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d5047\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'10', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d10191\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'11', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d27310\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'12', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11744\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'13', name:'\u95eb\u4fca\u8c6a', no:'\u6caa0101\u6c11\u521d11766\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'14', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0114\u6c11\u521d3811\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'15', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d8888\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'16', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11649\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'17', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6d590304\u6c11\u521d2380\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'18', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0105\u6c11\u521d51722\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'19', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u8c6b1722\u6c11\u521d2857\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'20', name:'\u8d75\u723d', no:'\u4eac0108\u6c11\u521d23948\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'21', name:'\u7eb3\u6069\u535a', no:'\u4eac0108\u6c11\u521d11622\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'22', name:'\u9ec4\u4e16\u6770', no:'\u8c6b0703\u77e5\u6c11\u521d330\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'23', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d4837\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'24', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d32887\u53f7', type:'\u5176\u4ed6', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'25', name:'\u66fe\u8bd7\u96e8', no:'\u6caa0101\u6c11\u521d11828\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'26', name:'\u6cb3\u6e90\u58f9\u865f\u767e\u8d27', no:'\u6caa0101\u6c11\u521d10751\u53f7', type:'\u7f51\u8d2d\u5408\u540c', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'27', name:'\u5d14\u83f2', no:'\u6caa0101\u6c11\u521d11829\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'28', name:'\u5927\u4f17\u53d8\u901f\u5668', no:'\u6caa0101\u6c11\u521d11830\u53f7', type:'\u4eba\u683c\u6743\u4fb5\u6743', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'29', name:'\u5b89\u7433\u7433', no:'\u4e910112\u6c11\u521d3431\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'30', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d4034\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'31', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u8c037536\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'32', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6d590192\u6c11\u521d3227\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'33', name:'\u674e\u96ea', no:'\u6caa0101\u6c11\u521d11353\u53f7', type:'\u77e5\u4ea7\u4fb5\u6743', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'34', name:'\u8096\u88d5\u67ab', no:'\u6caa0101\u6c11\u521d11258\u53f7', type:'\u5176\u4ed6\u6743\u76ca', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'35', name:'\u7f57\u5955\u51fd', no:'\u6caa0101\u6c11\u521d5439\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'36', name:'\u5468\u601d\u601d', no:'\u6caa0101\u6c11\u521d5006\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'37', name:'\u90d1\u6d77\u7965', no:'\u6caa0101\u6c11\u521d4461\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' }
+];
+
+  const cases0420 = [
+  { seq:'01', name:'\u6797\u65ed\u9e3f', no:'\u6caa0101\u6c11\u521d10195\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'02', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d8695\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'03', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u95fd01\u6c11\u7ec83370\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'04', name:'\u738b\u58a8\u96ea', no:'\u6d590105\u6c11\u521d1680\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'05', name:'\u5f90\u5dde\u6c5f\u6f6d\u6708\u7f51\u7edc\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d9451\u53f7', type:'\u7f51\u8d2d\u5408\u540c\u7ea0\u7eb7', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'06', name:'\u5218\u96ea\u6d0b', no:'\u6caa0101\u6c11\u521d11831\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'07', name:'\u5f20\u96c5\u6db5', no:'\u6caa0101\u6c11\u521d11832\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'08', name:'\u8521\u73b2\u5b50', no:'\u6caa0101\u6c11\u521d11833\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'09', name:'\u5f20\u6c38\u6d9b', no:'\u6caa0101\u6c11\u521d11834\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'10', name:'\u9648\u68a6\u8339', no:'\u6caa0101\u6c11\u521d11835\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'11', name:'\u674e\u957f\u5b89', no:'\u6caa0101\u6c11\u521d11836\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'12', name:'\u738b \u6b63\u8f69', no:'\u6caa0101\u6c11\u521d11838\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'13', name:'\u8c22\u94b0\u8521', no:'\u6caa0101\u6c11\u521d11841\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'14', name:'\u4e0a\u6d77\u7684\u786e\u662f\u9910\u996e\u7ba1\u7406\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11019\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'15', name:'\u6c5f\u6da6\u667a', no:'\u6caa0101\u6c11\u521d11888\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'16', name:'\u7530\u534e', no:'\u6caa0101\u6c11\u521d11889\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'17', name:'\u674e\u5de7\u5a05', no:'\u6caa0101\u6c11\u521d11890\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'18', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11898\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'19', name:'\u674e\u7fbd\u6c81', no:'\u6caa0101\u6c11\u521d11979\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'20', name:'\u51af\u96c5\u8389', no:'\u6caa0101\u6c11\u521d11891\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'21', name:'\u8c2d\u660e\u745e', no:'\u6caa0101\u6c11\u521d11980\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'22', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11982\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'23', name:'\u4e1c\u9633\u5e02\u6c49\u6f2b\u5de5\u827a\u54c1\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11030\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'24', name:'\u6797\u9526\u6cc9', no:'\u6caa0101\u6c11\u521d11983\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'25', name:'\u9648\u5de7\u82f1', no:'\u6caa0101\u6c11\u521d11990\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'26', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d12015\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'27', name:'\u5f20\u4e1c\u4f1f', no:'\u6caa0101\u6c11\u521d12017\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'28', name:'\u5b89\u7433\u7433', no:'\u4e910112\u6c11\u521d3431\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'29', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d9362\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'30', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6e580104\u6c11\u521d3782\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'31', name:'\u53f6\u5929\u5b9d', no:'\u6caa0101\u6c11\u521d11742\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'32', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11740\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'33', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11668\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'34', name:'\u5357\u4eac\u4e30\u9ea6\u9910\u996e\u7ba1\u7406\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d10668\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'35', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40304\u6c11\u521d61830\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'36', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6d590203\u6c11\u521d2450\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'37', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11351\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'38', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11418\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'39', name:'\u5357\u4eac\u6210\u529f\u4e0a\u5cb8\u6559\u80b2\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d8973\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'40', name:'\u5357\u4eac\u6210\u529f\u4e0a\u5cb8\u6559\u80b2\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d8972\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'41', name:'\u5357\u4eac\u6210\u529f\u4e0a\u5cb8\u6559\u80b2\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d8971\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'42', name:'\u6d59\u6c5f\u65e0\u5fe7\u5a31\u4e50\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d8985\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'43', name:'\u6d59\u6c5f\u65e0\u5fe7\u5a31\u4e50\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d8986\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'44', name:'\u601d\u8305\u533a\u76d8\u5c3c\u9152\u5427', no:'\u6caa0101\u6c11\u521d2981\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'45', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d25911\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'46', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6d590192\u6c11\u521d3227\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' }
+];
+
+  const cases0421 = [
+  { seq:'01', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d9175\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'02', name:'\u96f7\u4e30\u5982', no:'\u6caa0101\u6c11\u521d7265\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'03', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d10735\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'04', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d10148\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'05', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d9991\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'06', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6d590192\u6c11\u521d3227\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'07', name:'\u8c22\u94b0\u8521', no:'\u6caa0101\u6c11\u521d11841\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'08', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u82cf0192\u6c11\u521d17356\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'09', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d10343\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'10', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11255\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'11', name:'\u536b\u9896\u535a', no:'\u6caa0101\u6c11\u521d30064\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'12', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11723\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'13', name:'\u674e\u82ae\u83b9', no:'\u6d250105\u6c11\u521d3355\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'14', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d8888\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'15', name:'\u7f57\u96ea\u82e1', no:'\u6caa0101\u6c11\u521d12173\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'16', name:'\u7f57\u96ea\u82e1', no:'\u6caa0101\u6c11\u521d12172\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'17', name:'\u4efb\u4e45\u96ef', no:'\u6caa0101\u6c11\u521d12072\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'18', name:'\u5f20\u53d1\u5e05', no:'\u6caa0101\u6c11\u521d12071\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'19', name:'\u5408\u80a5\u5c1a\u4f18\u8da3\u8bbe\u8ba1\u6709\u9650\u516c\u53f8', no:'\u76960102\u6c11\u521d9321\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026', hearing:'2026\u5e7405\u670825\u65e5 10:00\uff08\u8ddd\u5f00\u5ead\u301033\u3011\u5929\uff09' },
+  { seq:'20', name:'\u4e9a\u7f8e\u5229\u52a0\uff08\u8fbd\u5b81\uff09\u836f\u4e1a\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11923\u53f7', type:'\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'21', name:'\u9676\u56fd\u6a11', no:'\u6caa0104\u6c11\u521d4916\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'22', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d2675\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'23', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d11049\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'24', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d8911\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'25', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d10723\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'26', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d27110\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'27', name:'\u5b8f\u73cf\u9ad8\u7ea7\u65f6\u88c5\u80a1\u4efd\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d7757\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'28', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d10921\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'29', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d25920\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'30', name:'\u5f90\u7199 \u6995', no:'\u6caa0104\u6c11\u521d10228\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'31', name:'\u56db\u5ddd\u4e0d\u8981\u5077\u6211\u77e5\u8bc6\u4ea7\u6743\u670d\u52a1\u6709\u9650\u516c\u53f8', no:'\u96550104\u77e5\u6c11\u521d123\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' }
+];
+
+  const cases0408new = [
+  { seq:'01', name:'\u8386\u7530\u5e02\u8354\u57ce\u533a\u96c5\u8c6a\u8fb0\u6b63\u8d38\u6613\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d10677\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u5176\u4ed6\u6743\u76ca\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'02', name:'\u674e\u6b23\u6021', no:'\u6caa0101\u6c11\u521d10675\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'03', name:'\u4e1c\u839e\u5e02\u5357\u57ce\u5a01\u5229\u53e4\u5fb7\u73a9\u5177\u5e97\uff08\u4e2a\u4f53\u5de5\u5546\u6237\uff09', no:'\u6caa0101\u6c11\u521d11010\u53f7', type:'\u5176\u4ed6', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'04', name:'\u8d75\u5f6c', no:'\u6caa0101\u6c11\u521d6671\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'05', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d7967\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'06', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d8962\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'07', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d9053\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'08', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa73\u6c11\u521d3057\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'09', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa73\u6c11\u521d3265\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'10', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d8278\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'11', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d9115\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'12', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d2675\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'13', name:'it\u624d\u67e5\u753a\u7edc\u79d1\u6280\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d34659\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'14', name:'\u80e1\u7693\u6708', no:'\u6caa0101\u6c11\u521d10716\u53f7', type:'\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'15', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u521d10743\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'16', name:'\u5408\u80a5\u878d\u6606\u79d1\u6280\u5e02\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d10744\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'17', name:'\u5c39\u951e\u4eea', no:'\u6caa0101\u6c11\u521d10745\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'18', name:'\u5de6\u70b9', no:'\u6caa0101\u6c11\u521d10746\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'19', name:'\u90b5\u9b41\u537f', no:'\u6caa0101\u6c11\u521d10747\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'20', name:'\u6c88\u4e50\u5b81', no:'\u6caa0101\u6c11\u521d10748\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'21', name:'\u533a\u82b7\u742a', no:'\u6caa0101\u6c11\u521d10749\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'22', name:'\u5f90\u65ed', no:'\u6caa0101\u6c11\u521d10998\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'23', name:'\u5f90\u65ed', no:'\u6caa0101\u6c11\u521d10999\u53f7', type:'\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'24', name:'\u4e0a\u6d77\u4e9a\u6735\u5546\u4e1a\u7ba1\u7406\uff08\u96c6\u56e2\uff09\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11006\u53f7', type:'\u4e0d\u6b63\u5f53\u7ade\u4e89', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'25', name:'\u4e2d\u5357\u535a\u96c6\u5929\u5377\u6587\u5316\u4f20\u5a92\u6709\u9650\u516c\u53f8', no:'\u6caa0101\u6c11\u521d11035\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'26', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d27124\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2025' },
+  { seq:'27', name:'\u8c22\u5609\u6b23', no:'\u6caa0101\u6c11\u521d8867\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'28', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u6caa0101\u6c11\u8c037106\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'29', name:'\u80e1\u4ea6\u666e', no:'\u6caa0101\u6c11\u521d11015\u53f7', type:'\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09', risk:'\u4e2d\u98ce\u9669', year:'2026' },
+  { seq:'30', name:'2026\u5e744\u67088\u65e5 \u5415\u6c90\u4e91\u98ce', no:'\u6caa0101\u6c11\u521d4034\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09', risk:'\u9ad8\u98ce\u9669', year:'2026' },
+  { seq:'31', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40192\u6c11\u521d1562\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'32', name:'\uff08\u5f85\u8865\u5145\uff09', no:'\u7ca40606\u6c11\u521d5135\u53f7', type:'\u5176\u4ed6', risk:'\u4f4e\u98ce\u9669', year:'2026' },
+  { seq:'33', name:'\u5e38\u5dde\u53e4\u6734\u5bb6\u95e8\u7a97\u6709\u9650\u516c\u53f8', no:'\u82cf0404\u6c11\u521d2580\u53f7', type:'\u7b14\u8bb0\u4fb5\u6743\uff08\u5176\u4ed6\u6743\u76ca\uff09', risk:'\u4e2d\u98ce\u9669', year:'2026' }
+];
+
 const allCases = [
+  ...casesKuanyu.map(c=>({...c, batch:'kuanyu'})),
   ...cases0317.map(c=>({...c, batch:'0317', year:'2026'})),
   ...cases0318.map(c=>({...c, batch:'0318', year:'2026'})),
   ...cases0330.map(c=>({...c, batch:'0330', year:'2026'})),
   ...cases0401.map(c=>({...c, batch:'0401', year:'2026'})),
+  ...cases0415.map(c=>({...c, batch:'0415', year:c.year||'2026'})),
+  ...cases0414.map(c=>({...c, batch:'0414', year:'2026'})),
+  ...cases0416.map(c=>({...c, batch:'0416', year:'2026'})),
+  ...cases0417.map(c=>({...c, batch:'0417', year:'2026'})),
+  ...cases0420.map(c=>({...c, batch:'0420', year:c.year||'2026'})),
+  ...cases0421.map(c=>({...c, batch:'0421', year:c.year||'2026'})),
+  ...cases0408new.map(c=>({...c, batch:'0408new', year:c.year||'2026'}))
 ];
 
-// ══ 页面路由 ══
+// ══ \u9875\u9762\u8def\u7531 ══
 function navTo(el) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   el.classList.add('active');
@@ -860,17 +1309,17 @@ function navTo(el) {
   document.getElementById(pageId).style.display = 'block';
 }
 
-// ══ 通用：渲染案件列表 ══
+// ══ \u901a\u7528\uff1a\u6e32\u67d3\u6848\u4ef6\u5217\u8868 ══
 function shortType(t) {
   return t
-    .replace('笔记/私信/群聊侵权（人格权）','人格权侵权')
-    .replace('笔记侵权（知产侵权）','知产侵权')
-    .replace('笔记侵权（其他权益）','其他权益')
-    .replace('商品侵权（知识产权）','商品知产')
-    .replace('服务合同（用户）','服务合同')
-    .replace('服务合同（商家）','商家合同')
-    .replace('网购合同纠纷','网购合同')
-    .replace('不正当竞争','不正竞争');
+    .replace('\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09','\u4eba\u683c\u6743\u4fb5\u6743')
+    .replace('\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09','\u77e5\u4ea7\u4fb5\u6743')
+    .replace('\u7b14\u8bb0\u4fb5\u6743\uff08\u5176\u4ed6\u6743\u76ca\uff09','\u5176\u4ed6\u6743\u76ca')
+    .replace('\u5546\u54c1\u4fb5\u6743\uff08\u77e5\u8bc6\u4ea7\u6743\uff09','\u5546\u54c1\u77e5\u4ea7')
+    .replace('\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09','\u670d\u52a1\u5408\u540c')
+    .replace('\u670d\u52a1\u5408\u540c\uff08\u5546\u5bb6\uff09','\u5546\u5bb6\u5408\u540c')
+    .replace('\u7f51\u8d2d\u5408\u540c\u7ea0\u7eb7','\u7f51\u8d2d\u5408\u540c')
+    .replace('\u4e0d\u6b63\u5f53\u7ade\u4e89','\u4e0d\u6b63\u7ade\u4e89');
 }
 
 function renderCaseItem(c, showBatch) {
@@ -880,62 +1329,69 @@ function renderCaseItem(c, showBatch) {
   const batchBadge = showBatch
     ? `<span class="tag" style="color:#3b7dd8;border-color:#3b7dd844;background:#3b7dd822;margin-left:4px">${c.batch}</span>`
     : '';
+  const detailBadge = c.detail ? '<span class="tag" style="color:#6b7280;border-color:#6b728044;background:#6b728011;margin-left:4px">' + c.detail + '</span>' : '';
+  const caseStyle = c.kuanyuId ? 'cursor:pointer;border-left:3px solid #dc2626' : '';
+  const caseClick = c.kuanyuId ? 'onclick="openDrawer(\'' + c.kuanyuId + '\')"' : '';
   return `
-    <div class="case-item">
+    <div class="case-item" style="${caseStyle}" ${caseClick}>
       <div class="case-seq">${c.seq}</div>
       <div class="case-main">
         <div class="case-name">${c.name}</div>
-        <div class="case-no">（${c.year||'2026'}）${c.no}</div>
+        <div class="case-no">\uff08${c.year||'2026'}\uff09${c.no}</div>
       </div>
       <span class="tag" style="color:${tc(c.type)};border-color:${bc(c.type)};background:${bc(c.type)}">${shortType(c.type)}</span>
       <span class="tag" style="color:${rtc(c.risk)};border-color:${rbc(c.risk)};background:${rbc(c.risk)};margin-left:4px">${c.risk}</span>
-      ${hearingBadge}${batchBadge}
+      ${hearingBadge}${batchBadge}${detailBadge}
     </div>`;
 }
 
 function renderBatchStats(containerId, cases) {
   const total = cases.length;
-  const hasPlaintiff = cases.filter(c => !c.name.includes('待补充')).length;
-  const highRisk = cases.filter(c => c.risk === '高风险').length;
+  const hasPlaintiff = cases.filter(c => !c.name.includes('\u5f85\u8865\u5145')).length;
+  const highRisk = cases.filter(c => c.risk === '\u9ad8\u98ce\u9669').length;
   const pct = Math.round(hasPlaintiff/total*100);
   document.getElementById(containerId).innerHTML = `
     <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="kpi">
-        <div class="kpi-head"><div class="kpi-title">案件总数</div></div>
+        <div class="kpi-head"><div class="kpi-title">\u6848\u4ef6\u603b\u6570</div></div>
         <div class="kpi-value" style="color:var(--accent)">${total}</div>
       </div>
       <div class="kpi">
-        <div class="kpi-head"><div class="kpi-title">有原告</div></div>
+        <div class="kpi-head"><div class="kpi-title">\u6709\u539f\u544a</div></div>
         <div class="kpi-value" style="color:var(--blue)">${hasPlaintiff}</div>
       </div>
       <div class="kpi">
-        <div class="kpi-head"><div class="kpi-title">完整率</div></div>
+        <div class="kpi-head"><div class="kpi-title">\u5b8c\u6574\u7387</div></div>
         <div class="kpi-value" style="color:var(--accent-mid)">${pct}%</div>
       </div>
       <div class="kpi">
-        <div class="kpi-head"><div class="kpi-title">高风险</div></div>
+        <div class="kpi-head"><div class="kpi-title">\u9ad8\u98ce\u9669</div></div>
         <div class="kpi-value" style="color:var(--red)">${highRisk}</div>
       </div>
     </div>`;
 }
 
-// ══ 初始化各子页面 ══
+// ══ \u521d\u59cb\u5316\u5404\u5b50\u9875\u9762 ══
 (function initPages(){
-  // 批次页
-  const batchMap = { '0317': cases0317, '0318': cases0318, '0330': cases0330, '0401': cases0401 };
+  // \u6279\u6b21\u9875
+  const batchMap = { '0317': cases0317, '0318': cases0318, '0330': cases0330, '0401': cases0401, '0414': cases0414, '0415': cases0415, '0416': cases0416, '0417': cases0417, '0420': cases0420, '0421': cases0421, '0408new': cases0408new };
   for (const [batch, list] of Object.entries(batchMap)) {
     renderBatchStats(`stats-${batch}`, list);
     document.getElementById(`list-${batch}`).innerHTML = list.map(c => renderCaseItem(c, false)).join('');
   }
 
-  // 案件明细页（全量）
+  // \u6848\u4ef6\u660e\u7ec6\u9875\uff08\u5168\u91cf\uff09
   renderAllCases(allCases);
 
-  // 开庭提醒页
-  const hearingCases = allCases.filter(c => c.hearing);
+  // \u5f00\u5ead\u63d0\u9192\u9875
+  const hearingCases = allCases.filter(c => c.hearing).sort((a, b) => {
+    // \u628a "2026\u5e7405\u670820\u65e5 14:30" \u8f6c\u6210\u53ef\u6bd4\u8f83\u7684\u5b57\u7b26\u4e32 "2026-05-20 14:30"
+    const toKey = h => h.replace(/(\d{4})\u5e74(\d{2})\u6708(\d{2})\u65e5\s*(\d{2}:\d{2})/, '$1-$2-$3 $4');
+    return toKey(a.hearing).localeCompare(toKey(b.hearing));
+  });
   const hearingsEl = document.getElementById('hearings-list');
   if (hearingCases.length === 0) {
-    hearingsEl.innerHTML = '<div class="card" style="color:var(--text2);text-align:center;padding:40px">暂无开庭提醒</div>';
+    hearingsEl.innerHTML = '<div class="card" style="color:var(--text2);text-align:center;padding:40px">\u6682\u65e0\u5f00\u5ead\u63d0\u9192</div>';
   } else {
     hearingsEl.innerHTML = hearingCases.map(c => `
       <div class="card" style="margin-bottom:12px;border-left:4px solid #ff5c6c">
@@ -943,7 +1399,7 @@ function renderBatchStats(containerId, cases) {
           <div style="font-size:32px">⏰</div>
           <div style="flex:1">
             <div style="font-size:15px;font-weight:700;color:var(--text)">${c.name}</div>
-            <div style="font-size:12px;color:var(--text2)">（${c.year||'2026'}）${c.no} &nbsp;·&nbsp; ${c.batch}批次</div>
+            <div style="font-size:12px;color:var(--text2)">\uff08${c.year||'2026'}\uff09${c.no} &nbsp;·&nbsp; ${c.batch}\u6279\u6b21</div>
           </div>
           <div style="text-align:right">
             <div style="font-size:14px;font-weight:700;color:#ff5c6c">${c.hearing}</div>
@@ -953,17 +1409,17 @@ function renderBatchStats(containerId, cases) {
       </div>`).join('');
   }
 
-  // 高风险页
-  const highRiskCases = allCases.filter(c => c.risk === '高风险');
+  // \u9ad8\u98ce\u9669\u9875
+  const highRiskCases = allCases.filter(c => c.risk === '\u9ad8\u98ce\u9669');
   document.getElementById('highrisk-list').innerHTML =
     highRiskCases.map(c => renderCaseItem(c, true)).join('');
 })();
 
-// ══ 案件明细筛选 ══
+// ══ \u6848\u4ef6\u660e\u7ec6\u7b5b\u9009 ══
 function renderAllCases(list) {
   const el = document.getElementById('all-cases-list');
   el.innerHTML = list.map(c => renderCaseItem(c, true)).join('');
-  document.getElementById('filter-count').textContent = `共 ${list.length} 件`;
+  document.getElementById('filter-count').textContent = `\u5171 ${list.length} \u4ef6`;
 }
 
 function filterCases() {
@@ -986,28 +1442,124 @@ function toggleTheme() {
   if (isDark) {
     html.removeAttribute('data-theme');
     document.getElementById('themeIcon').textContent = '🌙';
-    document.getElementById('themeLabel').textContent = '深色模式';
+    document.getElementById('themeLabel').textContent = '\u6df1\u8272\u6a21\u5f0f';
     document.getElementById('toggleSwitch').classList.remove('on');
     localStorage.setItem('theme', 'light');
   } else {
     html.setAttribute('data-theme', 'dark');
     document.getElementById('themeIcon').textContent = '☀️';
-    document.getElementById('themeLabel').textContent = '浅色模式';
+    document.getElementById('themeLabel').textContent = '\u6d45\u8272\u6a21\u5f0f';
     document.getElementById('toggleSwitch').classList.add('on');
     localStorage.setItem('theme', 'dark');
   }
 }
-// 记住上次选择
+// \u8bb0\u4f4f\u4e0a\u6b21\u9009\u62e9
 (function(){
   if (localStorage.getItem('theme') === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
     document.getElementById('themeIcon').textContent = '☀️';
-    document.getElementById('themeLabel').textContent = '浅色模式';
+    document.getElementById('themeLabel').textContent = '\u6d45\u8272\u6a21\u5f0f';
     document.getElementById('toggleSwitch').classList.add('on');
   }
 })();
 
+
+// ── \u5bbd\u5a31\u6848\u4ef6\u62bd\u5c49 ──────────────────────────────────────────────────────────────
+function openDrawer(id) {
+  var d = KUANYU_DETAIL[id];
+  if (!d) return;
+
+  // eyebrow + title
+  document.getElementById('kEyebrow').textContent = d.eyebrow;
+  document.getElementById('kTitle').textContent = d.title;
+
+  // tags
+  var tagsEl = document.getElementById('kTags');
+  tagsEl.innerHTML = '';
+  d.tags.forEach(function(t){ var s=document.createElement('span'); s.className='k-drawer-tag'; s.textContent=t; tagsEl.appendChild(s); });
+
+  // stage bar
+  var stageHtml = '<div class="k-stage">';
+  d.stages.forEach(function(s, i){
+    var isDone = i < d.currentStage;
+    var isCurrent = i === d.currentStage;
+    var colClass = 'k-stage-col' + (isDone?' done':'') + (isCurrent?' current':'');
+    var dotClass = 'k-stage-dot' + (isDone?' done':'') + (isCurrent?' current':'');
+    var labelClass = 'k-stage-label' + (isDone?' done':'') + (isCurrent?' current':'');
+    stageHtml += '<div class="' + colClass + '"><div class="' + dotClass + '"></div><div class="' + labelClass + '">' + s + '</div></div>';
+  });
+  stageHtml += '</div>';
+
+  // infos grid
+  var infoHtml = '<div class="k-info-grid">';
+  d.infos.forEach(function(info){
+    infoHtml += '<div class="k-info-card' + (info.full?' full':'') + '"><div class="k-info-label">'+info.label+'</div><div class="k-info-val">'+info.val+'</div></div>';
+  });
+  infoHtml += '</div>';
+
+  // claims
+  var claimsHtml = '<div class="k-claims">';
+  d.claims.forEach(function(cl, i){
+    claimsHtml += '<div class="k-claim-row"><span class="k-claim-num">'+(i+1)+'.</span><span>'+cl+'</span></div>';
+  });
+  claimsHtml += '</div>';
+
+  // facts
+  var factsHtml = '<div class="k-facts">';
+  d.facts.forEach(function(f){
+    factsHtml += '<div class="k-fact"><div class="k-fact-dot"></div><span>'+f+'</span></div>';
+  });
+  factsHtml += '</div>';
+
+  // risks
+  var risksHtml = '<div class="k-risks">';
+  d.risks.forEach(function(r){
+    risksHtml += '<div class="k-risk'+(r.level==='warn'?' warn':'')+'"><div class="k-risk-dot"></div><span>'+r.text+'</span></div>';
+  });
+  risksHtml += '</div>';
+
+  document.getElementById('kBody').innerHTML =
+    '<div class="k-sec"><div class="k-sec-title">\u6848\u4ef6\u8fdb\u5ea6</div>' + stageHtml + '</div>' +
+    '<div class="k-sec"><div class="k-sec-title">\u57fa\u672c\u6848\u60c5</div>' + infoHtml + '</div>' +
+    '<div class="k-sec"><div class="k-sec-title">\u8bc9\u8bb4\u8bf7\u6c42</div>' + claimsHtml + '</div>' +
+    '<div class="k-sec"><div class="k-sec-title">\u5173\u952e\u4e8b\u5b9e</div>' + factsHtml + '</div>' +
+    '<div class="k-sec"><div class="k-sec-title">\u98ce\u9669\u63d0\u793a</div>' + risksHtml + '</div>';
+
+  document.getElementById('kOverlay').classList.add('open');
+  document.getElementById('kDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('kOverlay').classList.remove('open');
+  document.getElementById('kDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toggleOldBatches() {
+  var el = document.getElementById('old-batches');
+  var btn = document.getElementById('batch-toggle-btn');
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    btn.textContent = '\u6536\u8d77 ▴';
+  } else {
+    el.style.display = 'none';
+    btn.textContent = '\u66f4\u65e9 ▸';
+  }
+}
 </script>
+
+<!-- 宽娱案件详情抽屉 -->
+<div class="k-drawer-overlay" id="kOverlay" onclick="closeDrawer()"></div>
+<div class="k-drawer" id="kDrawer">
+  <div class="k-drawer-head">
+    <div class="k-drawer-eyebrow" id="kEyebrow"></div>
+    <div class="k-drawer-title" id="kTitle"></div>
+    <div class="k-drawer-tags" id="kTags"></div>
+    <button class="k-drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="k-drawer-body" id="kBody"></div>
+</div>
 </div><!-- /main -->
 </body>
 </html>
