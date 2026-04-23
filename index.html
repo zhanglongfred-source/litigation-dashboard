@@ -320,10 +320,20 @@ footer {
 
   <div class="nav-section" style="margin-top:8px">
     <div class="nav-section-label">批次</div>
-    <div class="nav-item" data-page="page-batch-0317" onclick="navTo(this)"><span class="nav-icon">📅</span> 0317 批次 <span class="nav-badge green">46</span></div>
-    <div class="nav-item" data-page="page-batch-0318" onclick="navTo(this)"><span class="nav-icon">📅</span> 0318 批次 <span class="nav-badge green">24</span></div>
-    <div class="nav-item" data-page="page-batch-0330" onclick="navTo(this)"><span class="nav-icon">📅</span> 0330 批次 <span class="nav-badge green">31</span></div>
-    <div class="nav-item" data-page="page-batch-0401" onclick="navTo(this)"><span class="nav-icon">📅</span> 0401 批次 <span class="nav-badge green">44</span></div>
+    <!-- 超出6个的旧批次，折叠区 -->
+    <div id="batch-older-wrapper" style="display:none;overflow:hidden;transition:max-height 0.3s ease">
+      <!-- 旧批次动态插入 -->
+    </div>
+    <div id="batch-older-toggle" style="display:none;padding:4px 12px 4px 14px;font-size:11px;color:var(--text2);cursor:pointer;user-select:none" onclick="toggleOlderBatches()">
+      <span id="batch-older-arrow">▶</span> <span id="batch-older-label">展开更早批次</span>
+    </div>
+    <!-- 最新6个批次 -->
+    <div id="batch-recent-list">
+      <div class="nav-item" data-page="page-batch-0317" onclick="navTo(this)"><span class="nav-icon">📅</span> 0317 批次 <span class="nav-badge green">46</span></div>
+      <div class="nav-item" data-page="page-batch-0318" onclick="navTo(this)"><span class="nav-icon">📅</span> 0318 批次 <span class="nav-badge green">24</span></div>
+      <div class="nav-item" data-page="page-batch-0330" onclick="navTo(this)"><span class="nav-icon">📅</span> 0330 批次 <span class="nav-badge green">31</span></div>
+      <div class="nav-item" data-page="page-batch-0401" onclick="navTo(this)"><span class="nav-icon">📅</span> 0401 批次 <span class="nav-badge green">44</span></div>
+    </div>
   </div>
 
 
@@ -338,7 +348,7 @@ footer {
   </div>
 
   <div class="sidebar-footer">
-    数据截止 2026-04-03<br>
+    数据截止 2026-04-23<br>
     Case-Automation v3.1
   </div>
 </aside>
@@ -364,7 +374,7 @@ footer {
       <div class="kpi-title">收案总数</div>
     </div>
     <div class="kpi-value" style="color:var(--accent)">147</div>
-    <div class="kpi-meta">0317批 46件 &nbsp;·&nbsp; 0318批 24件 &nbsp;·&nbsp; 0330批 31件 &nbsp;·&nbsp; 0401批 46件</div>
+    <div class="kpi-meta">0317批 46件 &nbsp;·&nbsp; 0318批 24件 &nbsp;·&nbsp; 0422批 4件</div>
   </div>
   <div class="kpi">
     <div class="kpi-stripe" style="background:linear-gradient(90deg,var(--yellow),var(--orange))"></div>
@@ -445,7 +455,7 @@ footer {
 
   <!-- 案件明细 -->
   <div class="card">
-    <div class="card-title"><span class="dot" style="background:var(--accent)"></span>案件明细（0401 批次 · 44件）</div>
+    <div class="card-title"><span class="dot" style="background:var(--accent)"></span>案件明细（0422 批次 · 4件）</div>
     <div class="case-scroll" id="caseList"></div>
   </div>
 
@@ -453,17 +463,10 @@ footer {
   <div class="card">
     <div class="card-title"><span class="dot" style="background:#dc2626"></span>需关注事项</div>
     <div class="alert-list">
-      <div class="alert-item" style="border-color:#ff5c6c">
-        <div class="alert-dot" style="background:#ff5c6c"></div>
-        <div class="alert-text">
-          <strong>🔴 高风险！诉请 300 万元</strong>
-          沪73民初99号（商品侵权（知识产权）），需优先处理
-        </div>
-      </div>
       <div class="alert-item" style="border-color:#38f9a4">
         <div class="alert-dot" style="background:#38f9a4"></div>
         <div class="alert-text">
-          <strong>✅ 43 件低风险（无金额诉请）</strong>
+          <strong>✅ 4 件低风险（无金额诉请）</strong>
           无需紧急处理
         </div>
       </div>
@@ -472,7 +475,7 @@ footer {
 </div>
 
 <footer>
-  数据来源：法院 12368 短信 &nbsp;·&nbsp; 自动化处理 by Case-Automation v3.1 &nbsp;·&nbsp; 生成于 2026-04-03
+  数据来源：法院 12368 短信 &nbsp;·&nbsp; 自动化处理 by Case-Automation v3.1 &nbsp;·&nbsp; 生成于 2026-04-23
 </footer>
 
 </div><!-- /page-overview -->
@@ -562,13 +565,7 @@ footer {
 <script>
 // ══ 数据 ══
 const typeData = [
-  { label:'其他', val:78, color:'#7a85a8' },
-  { label:'知产侵权', val:21, color:'#38f9a4' },
-  { label:'人格权侵权', val:20, color:'#7c6fff' },
-  { label:'服务合同', val:10, color:'#4facfe' },
-  { label:'商品知产', val:7, color:'#ff9d3a' },
-  { label:'不正当竞争', val:7, color:'#ff5c6c' },
-  { label:'网购纠纷', val:2, color:'#ffc94a' },
+  { label:'其他', val:4, color:'#7a85a8' },
 ];
 const total = typeData.reduce((s,d)=>s+d.val,0);
 
@@ -581,52 +578,12 @@ const regionData = [
   { label:'其他省市',   val:7,  max:58 },
 ];
 
-// 批次: 0401  生成时间: 2026-04-03 10:58
-const cases0401 = [
-  { seq:'01', name:'新浪网技术（中国）有', no:'沪73民初101号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'02', name:'（待补充）', no:'沪0101民初5475号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'03', name:'侯龙烁', no:'沪0101民初8609号', type:'其他', risk:'低风险' },
-  { seq:'04', name:'杨芝彤', no:'沪0101民初5379号', type:'不正当竞争', risk:'低风险' },
-  { seq:'05', name:'李思桦', no:'沪0101民初5441号', type:'不正当竞争', risk:'低风险' },
-  { seq:'06', name:'（待补充）', no:'粤0192民初1467号', type:'其他', risk:'低风险' },
-  { seq:'07', name:'李天宇', no:'皖0102民初816号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'08', name:'（待补充）', no:'沪0101民初1814号', type:'其他', risk:'低风险' },
-  { seq:'09', name:'新浪网技术（中国）有', no:'沪73民初99号', type:'商品侵权（知识产权）', risk:'高风险' },
-  { seq:'10', name:'（待补充）', no:'沪0101民初4578号', type:'服务合同（用户）', risk:'低风险' },
-  { seq:'11', name:'（待补充）', no:'沪0101民初4839号', type:'服务合同（用户）', risk:'低风险' },
-  { seq:'12', name:'詹逸凡', no:'沪0101民初8976号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'13', name:'徐州江潭月网络科技有', no:'沪0101民初9451号', type:'网购合同纠纷', risk:'低风险' },
-  { seq:'14', name:'河南百通教育科技有限', no:'沪0101民初910号', type:'其他', risk:'低风险' },
-  { seq:'15', name:'蔡晨宇', no:'沪0101民初8939号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'16', name:'西山区志潘商贸商行经', no:'沪0101民初9094号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'17', name:'无锡品啦文化创意有限', no:'沪0101民初8937号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'18', name:'汪芊好', no:'沪0101民初9570号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'19', name:'（待补充）', no:'湘0111民初3874号', type:'不正当竞争', risk:'低风险' },
-  { seq:'20', name:'上海米哈游天命科技有', no:'沪0101民初7751号', type:'笔记侵权（知产侵权）', risk:'低风险' },
-  { seq:'21', name:'哈尔滨俏美人医疗器械', no:'黑0102民初24013号', type:'其他', risk:'低风险' },
-  { seq:'22', name:'杭州融鹏教育科技有限', no:'沪0101民初34288号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'23', name:'吴江区同里镇小丽工艺', no:'沪0101民初9028号', type:'服务合同（商家）', risk:'低风险' },
-  { seq:'24', name:'（待补充）', no:'浙0192民初1742号', type:'其他', risk:'低风险' },
-  { seq:'25', name:'中南博集天卷文化传媒', no:'沪0101民初2052号', type:'商品侵权（知识产权）', risk:'低风险' },
-  { seq:'26', name:'张丽', no:'沪0101民初8734号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'27', name:'（待补充）', no:'粤0192民初25920号', type:'其他', risk:'低风险' },
-  { seq:'28', name:'沪上阿姨（上海）实业', no:'沪0101民初3756号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'29', name:'范围围', no:'沪0101民初8911号', type:'网购合同纠纷', risk:'低风险' },
-  { seq:'30', name:'马悦', no:'陕0103民初2073号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'31', name:'（待补充）', no:'沪0101民初2682号', type:'其他', risk:'低风险' },
-  { seq:'32', name:'（待补充）', no:'沪0101民初5903号', type:'其他', risk:'低风险' },
-  { seq:'33', name:'张婧青', no:'沪0107民初9207号', type:'笔记侵权（其他权益）', risk:'低风险' },
-  { seq:'34', name:'（待补充）', no:'沪0105民初37685号', type:'其他', risk:'低风险' },
-  { seq:'35', name:'（待补充）', no:'京0116民初3842号', type:'其他', risk:'低风险' },
-  { seq:'36', name:'黄筱湉', no:'苏0505民初20439号', type:'其他', risk:'低风险' },
-  { seq:'37', name:'重庆优漫网络科技有限', no:'渝0192民初18990号', type:'不正当竞争', risk:'低风险' },
-  { seq:'38', name:'重庆优漫网络科技有限', no:'渝0192民初19000号', type:'不正当竞争', risk:'低风险' },
-  { seq:'39', name:'赵春雄', no:'沪0101民初9454号', type:'其他', risk:'低风险' },
-  { seq:'40', name:'房虞清', no:'沪0101民初9450号', type:'笔记侵权（其他权益）', risk:'低风险' },
-  { seq:'41', name:'杨颖洁', no:'沪0101民初9359号', type:'笔记侵权（其他权益）', risk:'低风险' },
-  { seq:'42', name:'吴紫霞', no:'沪0101民初9457号', type:'笔记/私信/群聊侵权（人格权）', risk:'低风险' },
-  { seq:'43', name:'（待补充）', no:'沪0101民初1249号', type:'其他', risk:'低风险' },
-  { seq:'44', name:'李伟民', no:'沪0101民初6828号', type:'其他', risk:'低风险' },
+// 批次: 0422  生成时间: 2026-04-23 14:48
+const cases0422 = [
+  { seq:'01', name:'徐熙 榕', no:'沪0104民初10228号', type:'其他', risk:'低风险' },
+  { seq:'02', name:'（待补充）', no:'沪0101民初10759号', type:'其他', risk:'低风险' },
+  { seq:'03', name:'（待补充）', no:'沪0101民初11869号', type:'其他', risk:'低风险' },
+  { seq:'04', name:'北京乘风直上咨询有限', no:'沪0101民初11739号', type:'其他', risk:'低风险' },
 ];
 
 // tag 颜色映射（按案件类型）
@@ -776,7 +733,7 @@ const cases0318 = [
 // ══ Case List ══
 (function(){
   const el = document.getElementById('caseList');
-  cases0401.forEach(c => {
+  cases0422.forEach(c => {
     const div = document.createElement('div');
     div.className = 'case-item';
     const hearingBadge = c.hearing
