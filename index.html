@@ -394,7 +394,7 @@ footer {
       <div class="nav-item" data-page="page-batch-0330" onclick="navTo(this)"><span class="nav-icon">📅</span> 0330 批次 <span class="nav-badge green">31</span></div>
       <div class="nav-item" data-page="page-batch-0401" onclick="navTo(this)"><span class="nav-icon">📅</span> 0401 批次 <span class="nav-badge green">44</span></div>
       <div class="nav-item" data-page="page-batch-0408new" onclick="navTo(this)"><span class="nav-icon">📅</span> 0408new 批次 <span class="nav-badge green">33</span></div>
-    </div>
+      </div>
     <!-- 最新6个批次，按时间从旧到新排列 -->
     <div class="nav-item" data-page="page-batch-0414" onclick="navTo(this)"><span class="nav-icon">📅</span> 0414 批次 <span class="nav-badge green">14</span></div>
     <div class="nav-item" data-page="page-batch-0415" onclick="navTo(this)"><span class="nav-icon">📅</span> 0415 批次 <span class="nav-badge green">31</span></div>
@@ -402,6 +402,7 @@ footer {
     <div class="nav-item" data-page="page-batch-0417" onclick="navTo(this)"><span class="nav-icon">📅</span> 0417 批次 <span class="nav-badge green">37</span></div>
     <div class="nav-item" data-page="page-batch-0420" onclick="navTo(this)"><span class="nav-icon">📅</span> 0420 批次 <span class="nav-badge green">46</span></div>
     <div class="nav-item" data-page="page-batch-0421" onclick="navTo(this)"><span class="nav-icon">📅</span> 0421 批次 <span class="nav-badge green">31</span></div>
+    <div class="nav-item" data-page="page-batch-0422" onclick="navTo(this)"><span class="nav-icon">📅</span> 0422 批次 <span class="nav-badge green">4</span></div>
   </div>
 
 
@@ -416,7 +417,7 @@ footer {
   </div>
 
   <div class="sidebar-footer">
-    数据截止 2026-04-23<br>
+    数据截止 2026-05-07<br>
     Case-Automation v3.1
   </div>
 </aside>
@@ -442,7 +443,7 @@ footer {
       <div class="kpi-title">收案总数</div>
     </div>
     <div class="kpi-value" style="color:var(--accent)">243</div>
-    <div class="kpi-meta">0317批 46件 &nbsp;·&nbsp; 0318批 24件 &nbsp;·&nbsp; 0422批 4件</div>
+    <div class="kpi-meta">0317批 46件 &nbsp;·&nbsp; 0318批 24件 &nbsp;·&nbsp; 0507批 4件</div>
   </div>
   <div class="kpi">
     <div class="kpi-stripe" style="background:linear-gradient(90deg,var(--yellow),var(--orange))"></div>
@@ -523,7 +524,7 @@ footer {
 
   <!-- 案件明细 -->
   <div class="card">
-    <div class="card-title"><span class="dot" style="background:var(--accent)"></span>案件明细（0422 批次 · 4件）</div>
+    <div class="card-title"><span class="dot" style="background:var(--accent)"></span>案件明细（0507 批次 · 4件）</div>
     <div class="case-scroll" id="caseList"></div>
   </div>
 
@@ -543,7 +544,7 @@ footer {
 </div>
 
 <footer>
-  数据来源：法院 12368 短信 &nbsp;·&nbsp; 自动化处理 by Case-Automation v3.1 &nbsp;·&nbsp; 生成于 2026-04-23
+  数据来源：法院 12368 短信 &nbsp;·&nbsp; 自动化处理 by Case-Automation v3.1 &nbsp;·&nbsp; 生成于 2026-05-07
 </footer>
 
 </div><!-- /page-overview -->
@@ -568,6 +569,7 @@ footer {
         <option value="0417">0417 批次</option>
         <option value="0420">0420 批次</option>
         <option value="0421">0421 批次</option>
+        <option value="0422">0422 批次</option>
         <option value="0408new">0408new 批次</option>
       </select>
       <select id="filter-risk" onchange="filterCases()" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px">
@@ -679,6 +681,12 @@ footer {
   <div id="stats-0408new" style="margin-bottom:14px"></div>
   <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0408new"></div></div>
 </div>
+
+<div class="page" id="page-batch-0422" style="display:none">
+  <div class="page-header"><h1>0422 批次</h1><p>2026-04-22 收案</p></div>
+  <div id="stats-0422" style="margin-bottom:14px"></div>
+  <div class="card"><div class="case-scroll" style="max-height:calc(100vh - 280px)" id="list-0422"></div></div>
+</div>
 <script>
 // ══ \u6570\u636e ══
 
@@ -773,15 +781,15 @@ const cases0401 = [
 ];
 
 // tag \u989c\u8272\u6620\u5c04\uff08\u6309\u6848\u4ef6\u7c7b\u578b\uff09
-const // 批次: 0422  生成时间: 2026-04-23 17:04
-const cases0422 = [
+// 批次: 0507  生成时间: 2026-05-07 18:00
+const cases0507 = [
   { seq:'01', name:'徐熙 榕', no:'沪0104民初10228号', type:'其他', risk:'低风险' },
   { seq:'02', name:'（待补充）', no:'沪0101民初10759号', type:'其他', risk:'低风险' },
   { seq:'03', name:'（待补充）', no:'沪0101民初11869号', type:'其他', risk:'低风险' },
   { seq:'04', name:'北京乘风直上咨询有限', no:'沪0101民初11739号', type:'其他', risk:'低风险' },
 ];
 
-TYPE_COLOR = {
+const TYPE_COLOR = {
   '\u670d\u52a1\u5408\u540c\uff08\u7528\u6237\uff09':          ['#3b7dd8','#eaf1fb'],
   '\u7b14\u8bb0/\u79c1\u4fe1/\u7fa4\u804a\u4fb5\u6743\uff08\u4eba\u683c\u6743\uff09': ['#2d7a4f','#e8f5ee'],
   '\u7b14\u8bb0\u4fb5\u6743\uff08\u77e5\u4ea7\u4fb5\u6743\uff09':      ['#4a9e6b','#e8f5ee'],
@@ -936,7 +944,7 @@ const cases0318 = [
 // ══ Case List ══
 (function(){
   const el = document.getElementById('caseList');
-  cases0422.forEach(c => {
+  cases0507.forEach(c => {
     const div = document.createElement('div');
     div.className = 'case-item';
     const hearingBadge = c.hearing
@@ -1311,6 +1319,7 @@ const allCases = [
   ...cases0417.map(c=>({...c, batch:'0417', year:'2026'})),
   ...cases0420.map(c=>({...c, batch:'0420', year:c.year||'2026'})),
   ...cases0421.map(c=>({...c, batch:'0421', year:c.year||'2026'})),
+  ...cases0422.map(c=>({...c, batch:'0422', year:c.year||'2026'})),
   ...cases0408new.map(c=>({...c, batch:'0408new', year:c.year||'2026'}))
 ];
 
@@ -1388,7 +1397,7 @@ function renderBatchStats(containerId, cases) {
 // ══ \u521d\u59cb\u5316\u5404\u5b50\u9875\u9762 ══
 (function initPages(){
   // \u6279\u6b21\u9875
-  const batchMap = { '0317': cases0317, '0318': cases0318, '0330': cases0330, '0401': cases0401, '0414': cases0414, '0415': cases0415, '0416': cases0416, '0417': cases0417, '0420': cases0420, '0421': cases0421, '0408new': cases0408new };
+  const batchMap = { '0317': cases0317, '0318': cases0318, '0330': cases0330, '0401': cases0401, '0414': cases0414, '0415': cases0415, '0416': cases0416, '0417': cases0417, '0420': cases0420, '0421': cases0421, '0422': cases0422, '0408new': cases0408new };
   for (const [batch, list] of Object.entries(batchMap)) {
     renderBatchStats(`stats-${batch}`, list);
     document.getElementById(`list-${batch}`).innerHTML = list.map(c => renderCaseItem(c, false)).join('');
